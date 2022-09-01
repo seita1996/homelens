@@ -6,6 +6,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 (async function(){
+  if(typeof window === 'undefined') {
+    return // Server sideでは実行しない
+  }
   // カメラ映像取得
   const localMediaStream = await navigator.mediaDevices.getUserMedia({
     video: {
