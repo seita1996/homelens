@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     video: {
       width: 1280,
       height: 720,
-      frameRate: 8
+      frameRate: { ideal: 8 }
     },
     audio: false
   }) as MediaStream
