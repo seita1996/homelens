@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-// import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   return (
@@ -11,7 +11,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <video id="localVideo" muted autoPlay playsInline></video>
+        <video id="localVideo" className={styles.videoBox} muted autoPlay playsInline></video>
       </div>
     </div>
   )
