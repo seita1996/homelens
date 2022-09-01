@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
@@ -11,6 +12,14 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.title}>homecam</div>
+      <div className={styles.flexSpaceAround}>
+        <div className={styles.btn}>
+          <Link href='/sender'>Sender</Link>
+        </div>
+        <div className={styles.btn}>
+          <Link href='/receiver'>Receiver</Link>
+        </div>
+      </div>
     </div>
   )
 }
