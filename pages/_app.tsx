@@ -9,8 +9,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   // カメラ映像取得
   const localMediaStream = await navigator.mediaDevices.getUserMedia({
     video: {
-      width: 1280,
-      height: 720,
+      width: { ideal: 1280 },
+      height: { ideal: 720 },
       frameRate: { ideal: 8 }
     },
     audio: false
