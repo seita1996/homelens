@@ -1,4 +1,5 @@
-.videoBox {
-  display: block;
-  margin: 0 auto;
+.title {
+  color: white;
+  font-size: 10vw;
+  text-align: center;
 }
