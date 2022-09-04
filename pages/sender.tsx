@@ -1,3 +1,4 @@
+import { connect } from 'http2'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Sender.module.css'
@@ -14,27 +15,80 @@ const Sender: NextPage = () => {
       <div>
         <video id="localVideo" className={styles.videoBox} muted autoPlay playsInline></video>
       </div>
+      <div>
+        <div>
+          <span>offer</span>
+          <span>{JSON.stringify(offer)}</span>
+        </div>
+        <div>
+          <span>canditates</span>
+          <span>{JSON.stringify(canditates)}</span>
+        </div>
+      </div>
     </div>
   )
 }
+
+let canditates: RTCIceCandidate[]
+let offer: RTCSessionDescriptionInit
 
 (async function(){
   if(typeof window === 'undefined') {
     return // Server sideでは実行しない
   }
-  // カメラ映像取得
-  const localMediaStream = await navigator.mediaDevices.getUserMedia({
-    video: {
-      width: { ideal: 1280 },
-      height: { ideal: 720 },
-      frameRate: { ideal: 8 }
-    },
-    audio: false
-  }) as MediaStream
-  const localVideo = document.getElementById('localVideo') as HTMLVideoElement
-  if(localVideo !== null) {
-    localVideo.srcObject = localMediaStream
-  }
+
+  await connectPeers()
 })()
+
+async function connectPeers() {
+  const config = {
+    offerToReceiveAudio: 1,
+    offerToReceiveVideo: 0,
+    iceServers: [{
+      urls: 'stun:stun.l.google.com:19302'
+    }]
+  }
+
+  const connection = new RTCPeerConnection(config)
+
+  const channel = connection.createDataChannel('channel')
+  // channel.onmessage = e => { receivedMessages.push(e.data) }
+  // channel.onopen = e => { channelOpen = true }
+  // channel.onclose = e => { channelOpen = false }
+
+  connection.onicecandidate = e => {
+    if (e.candidate) {
+      canditates.push(e.candidate)
+      console.log('canditates', canditates)
+    }
+  }
+
+  let localMediaStream: MediaStream
+  try {
+    localMediaStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        frameRate: { ideal: 8 }
+      },
+      audio: false
+    })
+    localMediaStream.getTracks().forEach(track => connection.addTrack(track, localMediaStream))
+    const localVideo = document.getElementById('localVideo') as HTMLVideoElement
+    if(localVideo !== null) {
+      localVideo.srcObject = localMediaStream
+    }
+  } catch (e) {
+    console.log(e)
+  }
+
+  // TODO: 画面表示のバインディングができたらawaitを削除
+  connection.createOffer().then(offerSDP => {
+    offer = offerSDP
+    console.log('offer', offer)
+  })
+
+  console.log('finish connectPeers')
+}
 
 export default Sender
