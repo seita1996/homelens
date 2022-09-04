@@ -29,7 +29,7 @@ const Sender: NextPage = () => {
   )
 }
 
-let canditates: RTCIceCandidate[]
+let canditates = [] as RTCIceCandidate[]
 let offer: RTCSessionDescriptionInit
 
 (async function(){
@@ -56,6 +56,7 @@ async function connectPeers() {
   // channel.onopen = e => { channelOpen = true }
   // channel.onclose = e => { channelOpen = false }
 
+  // setLocalDescriptionが呼ばれるとICE Candidatesが生成され発火
   connection.onicecandidate = e => {
     if (e.candidate) {
       canditates.push(e.candidate)
@@ -84,6 +85,7 @@ async function connectPeers() {
 
   // TODO: 画面表示のバインディングができたらawaitを削除
   connection.createOffer().then(offerSDP => {
+    connection.setLocalDescription(offerSDP) // ICE Candidates生成
     offer = offerSDP
     console.log('offer', offer)
   })
