@@ -11,17 +11,15 @@ const Sender: NextPage = () => {
   // let offer: RTCSessionDescriptionInit;
   const [offer, setOffer] = useState<RTCSessionDescriptionInit>();
 
-  (async function(){
+  useEffect(() => {
+    connectPeers()
+  }, [])
+
+  async function connectPeers() {
     if(typeof window === 'undefined') {
       return // Server sideでは実行しない
     }
 
-    useEffect(() => {
-      connectPeers()
-    }, [])
-  })()
-
-  async function connectPeers() {
     const config = {
       offerToReceiveAudio: 1,
       offerToReceiveVideo: 0,
