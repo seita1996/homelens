@@ -6,7 +6,8 @@ import React, { useEffect, useState } from 'react'
 import MyText from '../components/mytext'
 
 const Sender: NextPage = () => {
-  let canditates = [] as RTCIceCandidate[];
+  // let canditates = [] as RTCIceCandidate[];
+  const [canditates, setCanditates] = useState<RTCIceCandidate[]>([]);
   // let offer: RTCSessionDescriptionInit;
   const [offer, setOffer] = useState<RTCSessionDescriptionInit>();
 
@@ -39,7 +40,8 @@ const Sender: NextPage = () => {
     // setLocalDescriptionが呼ばれるとICE Candidatesが生成され発火
     connection.onicecandidate = e => {
       if (e.candidate) {
-        canditates.push(e.candidate)
+        setCanditates([...canditates, e.candidate])
+        // canditates.push(e.candidate)
         console.log('canditates', canditates)
       }
     }
