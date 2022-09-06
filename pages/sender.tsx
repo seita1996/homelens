@@ -84,6 +84,9 @@ const Sender: NextPage = () => {
   }
   function stopVideo() {
     console.log('stopVideo')
+    const localVideo = document.getElementById('localVideo') as HTMLVideoElement
+    pauseVideo(localVideo)
+    stopLocalStream(localStream)
   }
   function connect() {
     console.log('connect')
@@ -103,6 +106,28 @@ const Sender: NextPage = () => {
     }
     element.play()
     element.volume = 0
+  }
+  function pauseVideo(element: HTMLMediaElement) {
+    element.pause()
+    if ('srcObject' in element) {
+      element.srcObject = null
+    }
+    else {
+      if (element.src && (element.src !== '') ) {
+        window.URL.revokeObjectURL(element.src)
+      }
+      element.src = ''
+    }
+  }
+  function stopLocalStream(stream: MediaStream) {
+    let tracks = stream.getTracks()
+    if (! tracks) {
+      console.warn('NO tracks')
+      return
+    }
+    for (let track of tracks) {
+      track.stop()
+    }
   }
 
   const title: string = "title"
