@@ -1,79 +1,8 @@
-import { connect } from 'http2'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Sender.module.css'
-import React, { useEffect, useState } from 'react'
-import MyText from '../components/mytext'
-import { element } from 'prop-types'
 
 const Sender: NextPage = () => {
-  // let canditates = [] as RTCIceCandidate[];
-  // const [canditates, setCanditates] = useState<RTCIceCandidate[]>([]);
-  // let offer: RTCSessionDescriptionInit;
-  // const [offer, setOffer] = useState<RTCSessionDescriptionInit>();
-
-  // useEffect(() => {
-  //   connectPeers()
-  // }, [])
-
-  // async function connectPeers() {
-  //   if(typeof window === 'undefined') {
-  //     return // Server sideでは実行しない
-  //   }
-
-  //   const config = {
-  //     offerToReceiveAudio: 1,
-  //     offerToReceiveVideo: 0,
-  //     iceServers: [{
-  //       urls: 'stun:stun.l.google.com:19302'
-  //     }]
-  //   }
-
-  //   const connection = new RTCPeerConnection(config)
-
-  //   const channel = connection.createDataChannel('channel')
-  //   // channel.onmessage = e => { receivedMessages.push(e.data) }
-  //   // channel.onopen = e => { channelOpen = true }
-  //   // channel.onclose = e => { channelOpen = false }
-
-  //   // setLocalDescriptionが呼ばれるとICE Candidatesが生成され発火
-  //   connection.onicecandidate = e => {
-  //     if (e.candidate) {
-  //       setCanditates([...canditates, e.candidate])
-  //       // canditates.push(e.candidate)
-  //       console.log('canditates', canditates)
-  //     }
-  //   }
-
-  //   let localMediaStream: MediaStream
-  //   try {
-  //     localMediaStream = await navigator.mediaDevices.getUserMedia({
-  //       video: {
-  //         width: { ideal: 1280 },
-  //         height: { ideal: 720 },
-  //         frameRate: { ideal: 8 }
-  //       },
-  //       audio: false
-  //     })
-  //     localMediaStream.getTracks().forEach(track => connection.addTrack(track, localMediaStream))
-  //     const localVideo = document.getElementById('localVideo') as HTMLVideoElement
-  //     if(localVideo !== null) {
-  //       localVideo.srcObject = localMediaStream
-  //     }
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-
-  //   connection.createOffer().then(offerSDP => {
-  //     connection.setLocalDescription(offerSDP) // ICE Candidates生成
-  //     setOffer(offerSDP)
-  //     // offer = offerSDP
-  //     console.log('offer', offerSDP)
-  //   })
-
-  //   console.log('finish connectPeers')
-  // }
-
   let localStream: MediaStream
   let peerConnection: RTCPeerConnection
 
@@ -149,23 +78,17 @@ const Sender: NextPage = () => {
 
     // このロジックはReceiverで必要
     // --- on get remote stream ---
-    // if ('ontrack' in peer) {
-    //   peer.ontrack = function(event) {
-    //     console.log('-- peer.ontrack()')
-    //     let stream = event.streams[0]
-    //     playVideo(remoteVideo, stream)
-    //     if (event.streams.length > 1) {
-    //       console.warn('got multi-stream, but play only 1 stream')
-    //     }
-    //   }
-    // }
-    // else {
-    //   peer.onaddstream = function(event) {
-    //     console.log('-- peer.onaddstream()')
-    //     let stream = event.stream
-    //     playVideo(remoteVideo, stream)
-    //   };
-    // }
+    if ('ontrack' in peer) {
+      peer.ontrack = function(event) {
+        console.log('-- peer.ontrack()')
+        let stream = event.streams[0]
+        const remoteVideo = document.getElementById('remoteVideo') as HTMLVideoElement
+        playVideo(remoteVideo, stream)
+        if (event.streams.length > 1) {
+          console.warn('got multi-stream, but play only 1 stream')
+        }
+      }
+    }
 
     // --- on get local ICE candidate
     peer.onicecandidate = function (evt) {
@@ -335,9 +258,6 @@ const Sender: NextPage = () => {
     return trimed + String.fromCharCode(13, 10)
   }
 
-  // const title: string = "title"
-  // const description: string = "description"
-
   return (
     <div>
       <Head>
@@ -354,16 +274,9 @@ const Sender: NextPage = () => {
       </div>
       <div>
         <video id="localVideo" className={styles.videoBox} muted autoPlay playsInline></video>
+        <video id="remoteVideo" className={styles.videoBox} muted autoPlay playsInline></video>
       </div>
       <div>
-        {/* <MyText
-          title={"offer"}
-          description={JSON.stringify(offer)}
-        />
-        <MyText
-          title={"canditates"}
-          description={JSON.stringify(canditates)}
-        /> */}
         <p>SDP to send:&nbsp;
           <button type="button">copy local SDP</button><br />
           <textarea id="text_for_send_sdp" rows={5} cols={60} readOnly={true}>SDP to send</textarea>
