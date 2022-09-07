@@ -8,9 +8,9 @@ import { element } from 'prop-types'
 
 const Sender: NextPage = () => {
   // let canditates = [] as RTCIceCandidate[];
-  const [canditates, setCanditates] = useState<RTCIceCandidate[]>([]);
+  // const [canditates, setCanditates] = useState<RTCIceCandidate[]>([]);
   // let offer: RTCSessionDescriptionInit;
-  const [offer, setOffer] = useState<RTCSessionDescriptionInit>();
+  // const [offer, setOffer] = useState<RTCSessionDescriptionInit>();
 
   // useEffect(() => {
   //   connectPeers()
@@ -238,6 +238,53 @@ const Sender: NextPage = () => {
     });
   }
 
+  function setOffer(sessionDescription: RTCSessionDescription) {
+    if (peerConnection) {
+      console.error('peerConnection alreay exist!')
+    }
+    peerConnection = prepareNewConnection()
+    peerConnection.setRemoteDescription(sessionDescription)
+    .then(function() {
+      console.log('setRemoteDescription(offer) succsess in promise')
+      makeAnswer()
+    }).catch(function(err) {
+      console.error('setRemoteDescription(offer) ERROR: ', err)
+    })
+  }
+
+  function makeAnswer() {
+    console.log('sending Answer. Creating remote session description...' )
+    if (! peerConnection) {
+      console.error('peerConnection NOT exist!')
+      return
+    }
+
+    let options = {}
+    if (! localStream) {
+      //options = { offerToReceiveAudio: true, offerToReceiveVideo: true }
+
+      if ('addTransceiver' in peerConnection) {
+        console.log('-- use addTransceiver() for recvonly --')
+        peerConnection.addTransceiver('video', { direction: 'recvonly' })
+        peerConnection.addTransceiver('audio', { direction: 'recvonly' })
+      }
+    }
+
+    peerConnection.createAnswer(options)
+    .then(function (sessionDescription) {
+      console.log('createAnswer() succsess in promise')
+      return peerConnection.setLocalDescription(sessionDescription)
+    }).then(function() {
+      console.log('setLocalDescription() succsess in promise')
+
+      // -- Trickle ICE の場合は、初期SDPを相手に送る --
+      // -- Vanilla ICE の場合には、まだSDPは送らない --
+      //sendSdp(peerConnection.localDescription);
+    }).catch(function(err) {
+      console.error(err)
+    })
+  }
+
   function sendSdp(sessionDescription: RTCSessionDescription) {
     console.log('---sending sdp ---')
     const textForSendSdp: HTMLTextAreaElement = document.getElementById('text_for_send_sdp') as HTMLTextAreaElement
@@ -246,8 +293,50 @@ const Sender: NextPage = () => {
     textForSendSdp.select()
   }
 
-  const title: string = "title"
-  const description: string = "description"
+  function onSdpText() {
+    const textToReceiveSdp = document.getElementById('text_for_receive_sdp') as HTMLTextAreaElement
+    let text = textToReceiveSdp.value
+    text = _trimTailDoubleLF(text); // for Safar TP --> Chrome
+    if (peerConnection) {
+      console.log('Received answer text...')
+      let answer = new RTCSessionDescription({
+        type : 'answer',
+        sdp : text,
+      })
+      setAnswer(answer)
+    }
+    else {
+      console.log('Received offer text...')
+      let offer = new RTCSessionDescription({
+        type : 'offer',
+        sdp : text,
+      })
+      setOffer(offer)
+    }
+    textToReceiveSdp.value =''
+  }
+
+  function setAnswer(sessionDescription: RTCSessionDescription) {
+    if (! peerConnection) {
+      console.error('peerConnection NOT exist!')
+      return
+    }
+
+    peerConnection.setRemoteDescription(sessionDescription)
+    .then(function() {
+      console.log('setRemoteDescription(answer) succsess in promise')
+    }).catch(function(err) {
+      console.error('setRemoteDescription(answer) ERROR: ', err)
+    })
+  }
+
+  function _trimTailDoubleLF(str: string) {
+    const trimed = str.trim()
+    return trimed + String.fromCharCode(13, 10)
+  }
+
+  // const title: string = "title"
+  // const description: string = "description"
 
   return (
     <div>
@@ -267,23 +356,22 @@ const Sender: NextPage = () => {
         <video id="localVideo" className={styles.videoBox} muted autoPlay playsInline></video>
       </div>
       <div>
-        <MyText
+        {/* <MyText
           title={"offer"}
           description={JSON.stringify(offer)}
         />
         <MyText
           title={"canditates"}
           description={JSON.stringify(canditates)}
-        />
+        /> */}
         <p>SDP to send:&nbsp;
           <button type="button">copy local SDP</button><br />
           <textarea id="text_for_send_sdp" rows={5} cols={60} readOnly={true}>SDP to send</textarea>
         </p>
-        {/* Receive実装時にアンコメント */}
-        {/* <p>SDP to receive:&nbsp;
+        <p>SDP to receive:&nbsp;
           <button type="button" onClick={onSdpText}>Receive remote SDP</button><br />
-          <textarea id="text_for_receive_sdp" rows="5" cols="60"></textarea>
-        </p> */}
+          <textarea id="text_for_receive_sdp" rows={5} cols={60}></textarea>
+        </p>
       </div>
     </div>
   )
