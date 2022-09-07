@@ -193,10 +193,6 @@ const Sender: NextPage = () => {
           let sender = peer.addTrack(track, localStream)
         }
       }
-      else {
-        console.log('use addStream()')
-        peer.addStream(localStream)
-      }
     }
     else {
       console.warn('no local stream, but continue.')
