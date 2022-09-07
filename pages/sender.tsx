@@ -281,7 +281,7 @@ const Sender: NextPage = () => {
         />
         <p>SDP to send:&nbsp;
           <button type="button">copy local SDP</button><br />
-          <textarea id="text_for_send_sdp" rows="5" cols="60" readonly="readonly">SDP to send</textarea>
+          <textarea id="text_for_send_sdp" rows={5} cols={60} readOnly={true}>SDP to send</textarea>
         </p>
         {/* Receive実装時にアンコメント */}
         {/* <p>SDP to receive:&nbsp;
