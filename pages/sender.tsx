@@ -133,18 +133,18 @@ const Sender: NextPage = () => {
       options = { offerToReceiveAudio: false, offerToReceiveVideo: false }
     }
     // このロジックはReceiveで必要
-    // else {
-    //   // -- no localStream, so receive --
-    //   console.log('-- try recvonly ---')
+    else {
+      // -- no localStream, so receive --
+      console.log('-- try recvonly ---')
 
-    //   options = { offerToReceiveAudio: true, offerToReceiveVideo: true }
+      options = { offerToReceiveAudio: true, offerToReceiveVideo: true }
 
-    //   if ('addTransceiver' in peerConnection) {
-    //     console.log('-- use addTransceiver() for recvonly --')
-    //     peerConnection.addTransceiver('video').setDirection('recvonly')
-    //     peerConnection.addTransceiver('audio').setDirection('recvonly')
-    //   }
-    // }
+      if ('addTransceiver' in peerConnection) {
+        console.log('-- use addTransceiver() for recvonly --')
+        peerConnection.addTransceiver('video', { direction: 'recvonly' })
+        peerConnection.addTransceiver('audio', { direction: 'recvonly' })
+      }
+    }
 
     peerConnection.createOffer(options)
     .then(function (sessionDescription) {
