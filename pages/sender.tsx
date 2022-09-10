@@ -140,27 +140,24 @@ const Sender: NextPage = () => {
     peerConnection = prepareNewConnection(stream)
 
     let options = {}
-    if (stream) {
-      console.log('-- try sendonly ---')
-      options = { offerToReceiveAudio: false, offerToReceiveVideo: false }
-    }
-    // このロジックはReceiveで必要
-    else {
-      // -- no localStream, so receive --
-      console.log('-- try recvonly ---')
+    // if: 片方のVideoを送信のみ（受信しない）設定にしたいときにアンコメント
+    // if (stream) {
+    //   console.log('-- try sendonly ---')
+    //   options = { offerToReceiveAudio: false, offerToReceiveVideo: false }
+    // }
+    // else: このロジックはReceiveで必要?（なくても動いた）
+    // else {
+    //   // -- no localStream, so receive --
+    //   console.log('-- try recvonly ---')
 
-      options = { offerToReceiveAudio: true, offerToReceiveVideo: true }
+    //   options = { offerToReceiveAudio: true, offerToReceiveVideo: true }
 
-      if ('addTransceiver' in peerConnection) {
-        console.log('-- use addTransceiver() for recvonly --')
-        // 【RTCPeerConnection.addTransceiver()】
-        // 新しい RTCRtpTransceiver を作成し、それを RTCPeerConnection に関連付けられたトランシーバーのセットに追加
-        // 各トランシーバは、RTCRtpSender と RTCRtpReceiver の両方が関連付けられた双方向のストリームを表し、
-        // RTCRtpSender と RTCRtpReceiver の両方は、それに関連付けられた双方向のストリームを表す
-        peerConnection.addTransceiver('video', { direction: 'recvonly' })
-        peerConnection.addTransceiver('audio', { direction: 'recvonly' })
-      }
-    }
+    //   if ('addTransceiver' in peerConnection) {
+    //     console.log('-- use addTransceiver() for recvonly --')
+    //     peerConnection.addTransceiver('video', { direction: 'recvonly' })
+    //     peerConnection.addTransceiver('audio', { direction: 'recvonly' })
+    //   }
+    // }
 
     // 【RTCPeerConnection.createOffer()】
     // リモートPeerとの新しいWebRTC接続を開始するために、SDP Offerの生成を開始する
@@ -214,6 +211,10 @@ const Sender: NextPage = () => {
 
       if ('addTransceiver' in peerConnection) {
         console.log('-- use addTransceiver() for recvonly --')
+        // 【RTCPeerConnection.addTransceiver()】
+        // 新しい RTCRtpTransceiver を作成し、それを RTCPeerConnection に関連付けられたトランシーバーのセットに追加
+        // 各トランシーバは、RTCRtpSender と RTCRtpReceiver の両方が関連付けられた双方向のストリームを表し、
+        // RTCRtpSender と RTCRtpReceiver の両方は、それに関連付けられた双方向のストリームを表す
         peerConnection.addTransceiver('video', { direction: 'recvonly' })
         peerConnection.addTransceiver('audio', { direction: 'recvonly' })
       }
