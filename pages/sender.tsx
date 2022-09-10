@@ -27,7 +27,7 @@ const Sender: NextPage = () => {
     console.log('connect')
     if (! peerConnection) {
       console.log('make Offer')
-      makeOffer()
+      makeOffer(localStream)
     }
     else {
       console.warn('peer already exist.')
@@ -77,7 +77,7 @@ const Sender: NextPage = () => {
     }
   }
 
-  function prepareNewConnection() {
+  function prepareNewConnection(stream: MediaStream) {
     let pc_config = {"iceServers":[]}
     let peer = new RTCPeerConnection(pc_config)
 
@@ -119,13 +119,13 @@ const Sender: NextPage = () => {
     }
 
     // -- add local stream --
-    if (localStream) {
+    if (stream) {
       console.log('Adding local stream...')
       if ('addTrack' in peer) {
         console.log('use addTrack()')
-        let tracks = localStream.getTracks()
+        let tracks = stream.getTracks()
         for (let track of tracks) {
-          let sender = peer.addTrack(track, localStream)
+          let sender = peer.addTrack(track, stream)
         }
       }
     }
@@ -136,11 +136,11 @@ const Sender: NextPage = () => {
     return peer
   }
 
-  function makeOffer() {
-    peerConnection = prepareNewConnection()
+  function makeOffer(stream: MediaStream) {
+    peerConnection = prepareNewConnection(stream)
 
     let options = {}
-    if (localStream) {
+    if (stream) {
       console.log('-- try sendonly ---')
       options = { offerToReceiveAudio: false, offerToReceiveVideo: false }
     }
@@ -182,11 +182,11 @@ const Sender: NextPage = () => {
     });
   }
 
-  function setOffer(sessionDescription: RTCSessionDescription) {
+  function setOffer(sessionDescription: RTCSessionDescription, stream: MediaStream) {
     if (peerConnection) {
       console.error('peerConnection alreay exist!')
     }
-    peerConnection = prepareNewConnection()
+    peerConnection = prepareNewConnection(stream)
     // 【RTCPeerConnection.setRemoteDescription()】
     // 指定されたsessionDescriptionをリモートPeerの現在のOfferまたはAnswerとして設定する
     // sessionDescriptionはメディア形式を含む、接続のリモート側のプロパティを指定する
@@ -195,13 +195,13 @@ const Sender: NextPage = () => {
     peerConnection.setRemoteDescription(sessionDescription)
     .then(function() {
       console.log('setRemoteDescription(offer) succsess in promise')
-      makeAnswer()
+      makeAnswer(stream)
     }).catch(function(err) {
       console.error('setRemoteDescription(offer) ERROR: ', err)
     })
   }
 
-  function makeAnswer() {
+  function makeAnswer(stream: MediaStream) {
     console.log('sending Answer. Creating remote session description...' )
     if (! peerConnection) {
       console.error('peerConnection NOT exist!')
@@ -209,7 +209,7 @@ const Sender: NextPage = () => {
     }
 
     let options = {}
-    if (! localStream) {
+    if (! stream) {
       //options = { offerToReceiveAudio: true, offerToReceiveVideo: true }
 
       if ('addTransceiver' in peerConnection) {
@@ -263,7 +263,7 @@ const Sender: NextPage = () => {
         type : 'offer',
         sdp : text,
       })
-      setOffer(offer)
+      setOffer(offer, localStream)
     }
     textToReceiveSdp.value =''
   }
