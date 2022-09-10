@@ -114,7 +114,7 @@ const Sender: NextPage = () => {
 
         // Trickle ICE の場合は、何もしない
         // Vanilla ICE の場合には、ICE candidateを含んだSDPを相手に送る
-        sendSdp(peer.localDescription as RTCSessionDescription)
+        displaySdp(peer.localDescription as RTCSessionDescription)
       }
     }
 
@@ -173,7 +173,7 @@ const Sender: NextPage = () => {
 
       // -- Trickle ICE の場合は、初期SDPを相手に送る --
       // -- Vanilla ICE の場合には、まだSDPは送らない --
-      //sendSdp(peerConnection.localDescription);
+      //displaySdp(peerConnection.localDescription);
     }).catch(function(err) {
       console.error(err)
     });
@@ -232,18 +232,18 @@ const Sender: NextPage = () => {
 
       // -- Trickle ICE の場合は、初期SDPを相手に送る --
       // -- Vanilla ICE の場合には、まだSDPは送らない --
-      //sendSdp(peerConnection.localDescription);
+      //displaySdp(peerConnection.localDescription);
     }).catch(function(err) {
       console.error(err)
     })
   }
 
-  function sendSdp(sessionDescription: RTCSessionDescription) {
+  function displaySdp(sessionDescription: RTCSessionDescription) {
     console.log('---sending sdp ---')
-    const textForSendSdp: HTMLTextAreaElement = document.getElementById('text_for_send_sdp') as HTMLTextAreaElement
-    textForSendSdp.value = sessionDescription.sdp
-    textForSendSdp.focus()
-    textForSendSdp.select()
+    const textForDisplaySdp: HTMLTextAreaElement = document.getElementById('text_for_display_sdp') as HTMLTextAreaElement
+    textForDisplaySdp.value = sessionDescription.sdp
+    textForDisplaySdp.focus()
+    textForDisplaySdp.select()
   }
 
   function onSdpText() {
@@ -309,7 +309,7 @@ const Sender: NextPage = () => {
       <div>
         <p>SDP to send:&nbsp;
           <button type="button">copy local SDP</button><br />
-          <textarea id="text_for_send_sdp" rows={5} cols={60} readOnly={true}>SDP to send</textarea>
+          <textarea id="text_for_display_sdp" rows={5} cols={60} readOnly={true}>SDP to send</textarea>
         </p>
         <p>SDP to receive:&nbsp;
           <button type="button" onClick={onSdpText}>Receive remote SDP</button><br />
