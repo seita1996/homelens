@@ -25,13 +25,8 @@ const Sender: NextPage = () => {
   // Start PeerConnection
   function connect() {
     console.log('connect')
-    if (! peerConnection) {
-      console.log('make Offer')
-      makeOffer(localStream)
-    }
-    else {
-      console.warn('peer already exist.')
-    }
+    console.log('make Offer')
+    makeOffer(localStream)
   }
   function hangup() {
     console.log('hangup')
@@ -137,6 +132,10 @@ const Sender: NextPage = () => {
   }
 
   function makeOffer(stream: MediaStream) {
+    if (peerConnection) {
+      console.warn('peer already exist.')
+      return
+    }
     peerConnection = prepareNewConnection(stream)
 
     let options = {}
@@ -250,22 +249,7 @@ const Sender: NextPage = () => {
     const textToReceiveSdp = document.getElementById('text_for_receive_sdp') as HTMLTextAreaElement
     let text = textToReceiveSdp.value
     text = _trimTailDoubleLF(text); // for Safar TP --> Chrome
-    if (peerConnection) {
-      console.log('Received answer text...')
-      let answer = new RTCSessionDescription({
-        type : 'answer',
-        sdp : text,
-      })
-      setAnswer(answer)
-    }
-    else {
-      console.log('Received offer text...')
-      let offer = new RTCSessionDescription({
-        type : 'offer',
-        sdp : text,
-      })
-      setOffer(offer, localStream)
-    }
+    setRemoteDescriptionOfferAnswer(text)
     textToReceiveSdp.value =''
   }
 
@@ -286,6 +270,25 @@ const Sender: NextPage = () => {
   function _trimTailDoubleLF(str: string) {
     const trimed = str.trim()
     return trimed + String.fromCharCode(13, 10)
+  }
+
+  function setRemoteDescriptionOfferAnswer(sdpText: string) {
+    if (peerConnection) {
+      console.log('Received answer text...')
+      let answer = new RTCSessionDescription({
+        type : 'answer',
+        sdp : sdpText,
+      })
+      setAnswer(answer)
+    }
+    else {
+      console.log('Received offer text...')
+      let offer = new RTCSessionDescription({
+        type : 'offer',
+        sdp : sdpText,
+      })
+      setOffer(offer, localStream)
+    }
   }
 
   return (
