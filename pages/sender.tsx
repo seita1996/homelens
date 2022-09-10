@@ -249,7 +249,7 @@ const Sender: NextPage = () => {
     const textToReceiveSdp = document.getElementById('text_for_receive_sdp') as HTMLTextAreaElement
     let text = textToReceiveSdp.value
     text = _trimTailDoubleLF(text); // for Safar TP --> Chrome
-    setRemoteDescriptionOfferAnswer(text)
+    setRemoteDescriptionOfferAnswer(text, localStream)
     textToReceiveSdp.value =''
   }
 
@@ -272,7 +272,7 @@ const Sender: NextPage = () => {
     return trimed + String.fromCharCode(13, 10)
   }
 
-  function setRemoteDescriptionOfferAnswer(sdpText: string) {
+  function setRemoteDescriptionOfferAnswer(sdpText: string, stream: MediaStream) {
     if (peerConnection) {
       console.log('Received answer text...')
       let answer = new RTCSessionDescription({
@@ -287,7 +287,7 @@ const Sender: NextPage = () => {
         type : 'offer',
         sdp : sdpText,
       })
-      setOffer(offer, localStream)
+      setOffer(offer, stream)
     }
   }
 
