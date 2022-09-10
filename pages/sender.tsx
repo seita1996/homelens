@@ -3,9 +3,10 @@ import Head from 'next/head'
 import styles from '../styles/Sender.module.css'
 
 const Sender: NextPage = () => {
-  let localStream: MediaStream
-  let peerConnection: RTCPeerConnection
+  let localStream: MediaStream // TODO: スコープを狭く
+  let peerConnection: RTCPeerConnection // TODO: スコープを狭く
 
+  // 自身のデバイスのカメラをオンにしてvideoタグ内へ映像を反映
   async function startVideo() {
     console.log('startVideo')
     const localVideo = document.getElementById('localVideo') as HTMLVideoElement
@@ -13,6 +14,7 @@ const Sender: NextPage = () => {
     playVideo(localVideo, localStream)
   }
 
+  // 自身のデバイスのカメラをオフにしてStreamを中断
   function stopVideo() {
     console.log('stopVideo')
     const localVideo = document.getElementById('localVideo') as HTMLVideoElement
@@ -35,6 +37,7 @@ const Sender: NextPage = () => {
     console.log('hangup')
   }
 
+  // 対象のHTMLエレメントに対してMediaStreamを反映
   function playVideo(element: HTMLMediaElement, stream: MediaStream) {
     console.log('playVideo')
     if ('srcObject' in element) {
@@ -48,6 +51,7 @@ const Sender: NextPage = () => {
     element.volume = 0
   }
 
+  // デバイスのカメラをオフ
   function pauseVideo(element: HTMLMediaElement) {
     element.pause()
     if ('srcObject' in element) {
@@ -61,6 +65,7 @@ const Sender: NextPage = () => {
     }
   }
 
+  // Streamを中断
   function stopLocalStream(stream: MediaStream) {
     let tracks = stream.getTracks()
     if (! tracks) {
@@ -79,6 +84,10 @@ const Sender: NextPage = () => {
     // このロジックはReceiverで必要
     // --- on get remote stream ---
     if ('ontrack' in peer) {
+      // 【RTCPeerConnection.ontrack()】
+      // Peer接続が完了している状態でイベントが配信される
+      // RTCRtpReceiverに新しいTrackが追加されるとontrackのイベントハンドラへtrackイベントが送信される
+      // ※RTCRtpReceiverはRTCPeerConnection上のMediaStreamTrackのデータ受信とデコードを管理するもの
       peer.ontrack = function(event) {
         console.log('-- peer.ontrack()')
         let stream = event.streams[0]
@@ -91,6 +100,9 @@ const Sender: NextPage = () => {
     }
 
     // --- on get local ICE candidate
+    // 【RTCPeerConnection.onicecandidate()】
+    // RTCPeerConnection.setLocalDescription()の呼び出しによってRTCIceCandidateが識別され、
+    // ローカルPeerに追加されると、RTCPeerConnectionに送信される
     peer.onicecandidate = function (evt) {
       if (evt.candidate) {
         console.log(evt.candidate)
@@ -141,14 +153,23 @@ const Sender: NextPage = () => {
 
       if ('addTransceiver' in peerConnection) {
         console.log('-- use addTransceiver() for recvonly --')
+        // 【RTCPeerConnection.addTransceiver()】
+        // 新しい RTCRtpTransceiver を作成し、それを RTCPeerConnection に関連付けられたトランシーバーのセットに追加
+        // 各トランシーバは、RTCRtpSender と RTCRtpReceiver の両方が関連付けられた双方向のストリームを表し、
+        // RTCRtpSender と RTCRtpReceiver の両方は、それに関連付けられた双方向のストリームを表す
         peerConnection.addTransceiver('video', { direction: 'recvonly' })
         peerConnection.addTransceiver('audio', { direction: 'recvonly' })
       }
     }
 
+    // 【RTCPeerConnection.createOffer()】
+    // リモートPeerとの新しいWebRTC接続を開始するために、SDP Offerの生成を開始する
     peerConnection.createOffer(options)
     .then(function (sessionDescription) {
       console.log('createOffer() succsess in promise')
+      // 【RTCPeerConnection.setLocalDescription()】
+      // 接続に関連付けられたローカルな記述を変更する
+      // 記述が変更されると非同期に実行される Promise を返す
       return peerConnection.setLocalDescription(sessionDescription)
     }).then(function() {
       console.log('setLocalDescription() succsess in promise')
@@ -166,6 +187,11 @@ const Sender: NextPage = () => {
       console.error('peerConnection alreay exist!')
     }
     peerConnection = prepareNewConnection()
+    // 【RTCPeerConnection.setRemoteDescription()】
+    // 指定されたsessionDescriptionをリモートPeerの現在のOfferまたはAnswerとして設定する
+    // sessionDescriptionはメディア形式を含む、接続のリモート側のプロパティを指定する
+    // sessionDescriptionが変更されると、非同期で実行されるPromiseを返す
+    // 通常シグナリングサーバー上で他のPeerからOfferまたはAnswerを受信した後に呼び出される
     peerConnection.setRemoteDescription(sessionDescription)
     .then(function() {
       console.log('setRemoteDescription(offer) succsess in promise')
@@ -193,6 +219,9 @@ const Sender: NextPage = () => {
       }
     }
 
+    // 【RTCPeerConnection.createAnswer()】
+    // WebRTC 接続のOffer/Answer交渉中に リモートピアから受け取ったOfferに対する SDP Answerを作成する
+    // Answerは返された Promise に配信され、ネゴシエーションプロセスを継続するために、Offerのソースに送信される必要がある
     peerConnection.createAnswer(options)
     .then(function (sessionDescription) {
       console.log('createAnswer() succsess in promise')
