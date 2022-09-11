@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Sender.module.css'
 
-const P2P = function() {
+const P2P = function({ remoteVideoId = '', displaySdpId = '' }) {
   let peerConnection: RTCPeerConnection
 
   return {
@@ -148,7 +148,7 @@ const P2P = function() {
         peer.ontrack = function(event) {
           console.log('-- peer.ontrack()')
           let stream = event.streams[0]
-          const remoteVideo = document.getElementById('remoteVideo') as HTMLVideoElement
+          const remoteVideo = document.getElementById(remoteVideoId) as HTMLVideoElement
           _this.playVideo(remoteVideo, stream)
           if (event.streams.length > 1) {
             console.warn('got multi-stream, but play only 1 stream')
@@ -188,7 +188,7 @@ const P2P = function() {
 
     displaySdp: function(sessionDescription: RTCSessionDescription) {
       console.log('---sending sdp ---')
-      const textForDisplaySdp: HTMLTextAreaElement = document.getElementById('text_for_display_sdp') as HTMLTextAreaElement
+      const textForDisplaySdp: HTMLTextAreaElement = document.getElementById(displaySdpId) as HTMLTextAreaElement
       textForDisplaySdp.value = sessionDescription.sdp
       textForDisplaySdp.focus()
       textForDisplaySdp.select()
@@ -199,7 +199,7 @@ const P2P = function() {
 const Sender: NextPage = () => {
   let localStream: MediaStream // TODO: スコープを狭く
 
-  const p2p = P2P()
+  const p2p = P2P({ remoteVideoId: 'remoteVideo', displaySdpId: 'text_for_display_sdp' })
 
   // 自身のデバイスのカメラをオンにしてvideoタグ内へ映像を反映
   async function startVideo() {
