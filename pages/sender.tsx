@@ -2,293 +2,242 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Sender.module.css'
 
+const P2P = function() {
+  let peerConnection: RTCPeerConnection
+
+  return {
+    // 対象のHTMLエレメントに対してMediaStreamを反映
+    playVideo: function(element: HTMLMediaElement, stream: MediaStream) {
+      console.log('playVideo')
+      if ('srcObject' in element) {
+        if (! element.srcObject) {
+          element.srcObject = stream
+        } else {
+          console.log('stream alreay playing, so skip')
+        }
+      }
+      element.play()
+      element.volume = 0
+    },
+
+    // デバイスのカメラをオフ
+    pauseVideo: function(element: HTMLMediaElement) {
+      element.pause()
+      if ('srcObject' in element) {
+        element.srcObject = null
+      }
+      else {
+        if (element.src && (element.src !== '') ) {
+          window.URL.revokeObjectURL(element.src)
+        }
+        element.src = ''
+      }
+    },
+
+    // Streamを中断
+    stopLocalStream: function(stream: MediaStream) {
+      let tracks = stream.getTracks()
+      if (! tracks) {
+        console.warn('NO tracks')
+        return
+      }
+      for (let track of tracks) {
+        track.stop()
+      }
+    },
+
+    setRemoteDescriptionOfferAnswer: function(sdpText: string, stream: MediaStream) {
+      if (peerConnection) {
+        console.log('Received answer text...')
+        let answer = new RTCSessionDescription({
+          type : 'answer',
+          sdp : sdpText,
+        })
+        this.setAnswer(answer)
+      }
+      else {
+        console.log('Received offer text...')
+        let offer = new RTCSessionDescription({
+          type : 'offer',
+          sdp : sdpText,
+        })
+        this.setOffer(offer, stream)
+      }
+    },
+
+    setAnswer: function(sessionDescription: RTCSessionDescription) {
+      if (! peerConnection) {
+        console.error('peerConnection NOT exist!')
+        return
+      }
+      peerConnection.setRemoteDescription(sessionDescription)
+      .then(function() {
+        console.log('setRemoteDescription(answer) succsess in promise')
+      }).catch(function(err) {
+        console.error('setRemoteDescription(answer) ERROR: ', err)
+      })
+    },
+
+    setOffer: function(sessionDescription: RTCSessionDescription, stream: MediaStream) {
+      if (peerConnection) {
+        console.error('peerConnection alreay exist!')
+      }
+      peerConnection = this.prepareNewConnection(stream)
+      const _this = this
+      peerConnection.setRemoteDescription(sessionDescription)
+      .then(function() {
+        console.log('setRemoteDescription(offer) succsess in promise')
+        _this.makeAnswer(stream)
+      }).catch(function(err) {
+        console.error('setRemoteDescription(offer) ERROR: ', err)
+      })
+    },
+
+    makeAnswer: function(stream: MediaStream) {
+      console.log('sending Answer. Creating remote session description...' )
+      if (! peerConnection) {
+        console.error('peerConnection NOT exist!')
+        return
+      }
+      let options = {}
+      if (! stream) {
+        //options = { offerToReceiveAudio: true, offerToReceiveVideo: true }
+
+        if ('addTransceiver' in peerConnection) {
+          console.log('-- use addTransceiver() for recvonly --')
+          peerConnection.addTransceiver('video', { direction: 'recvonly' })
+          peerConnection.addTransceiver('audio', { direction: 'recvonly' })
+        }
+      }
+      peerConnection.createAnswer(options)
+      .then(function (sessionDescription) {
+        console.log('createAnswer() succsess in promise')
+        return peerConnection.setLocalDescription(sessionDescription)
+      }).then(function() {
+        console.log('setLocalDescription() succsess in promise')
+      }).catch(function(err) {
+        console.error(err)
+      })
+    },
+
+    makeOffer: function(stream: MediaStream) {
+      if (peerConnection) {
+        console.warn('peer already exist.')
+        return
+      }
+      peerConnection = this.prepareNewConnection(stream)
+
+      let options = {}
+      peerConnection.createOffer(options)
+      .then(function (sessionDescription) {
+        console.log('createOffer() succsess in promise')
+        return peerConnection.setLocalDescription(sessionDescription)
+      }).then(function() {
+        console.log('setLocalDescription() succsess in promise')
+      }).catch(function(err) {
+        console.error(err)
+      })
+    },
+
+    prepareNewConnection: function(stream: MediaStream) {
+      let pc_config = {"iceServers":[]}
+      let peer = new RTCPeerConnection(pc_config)
+      // --- on get remote stream ---
+      const _this = this
+      if ('ontrack' in peer) {
+        peer.ontrack = function(event) {
+          console.log('-- peer.ontrack()')
+          let stream = event.streams[0]
+          const remoteVideo = document.getElementById('remoteVideo') as HTMLVideoElement
+          _this.playVideo(remoteVideo, stream)
+          if (event.streams.length > 1) {
+            console.warn('got multi-stream, but play only 1 stream')
+          }
+        }
+      }
+      // --- on get local ICE candidate
+      peer.onicecandidate = function (evt) {
+        if (evt.candidate) {
+          console.log(evt.candidate)
+          // Trickle ICE の場合は、ICE candidateを相手に送る
+          // Vanilla ICE の場合には、何もしない
+        } else {
+          console.log('empty ice event')
+          // Trickle ICE の場合は、何もしない
+          // Vanilla ICE の場合には、ICE candidateを含んだSDPを相手に送る
+          _this.displaySdp(peer.localDescription as RTCSessionDescription)
+        }
+      }
+      // -- add local stream --
+      if (stream) {
+        console.log('Adding local stream...')
+        if ('addTrack' in peer) {
+          console.log('use addTrack()')
+          let tracks = stream.getTracks()
+          for (let track of tracks) {
+            let sender = peer.addTrack(track, stream)
+          }
+        }
+      }
+      else {
+        console.warn('no local stream, but continue.')
+      }
+
+      return peer
+    },
+
+    displaySdp: function(sessionDescription: RTCSessionDescription) {
+      console.log('---sending sdp ---')
+      const textForDisplaySdp: HTMLTextAreaElement = document.getElementById('text_for_display_sdp') as HTMLTextAreaElement
+      textForDisplaySdp.value = sessionDescription.sdp
+      textForDisplaySdp.focus()
+      textForDisplaySdp.select()
+    }
+  }
+}
+
 const Sender: NextPage = () => {
   let localStream: MediaStream // TODO: スコープを狭く
-  let peerConnection: RTCPeerConnection // TODO: スコープを狭く
+
+  const p2p = P2P()
 
   // 自身のデバイスのカメラをオンにしてvideoタグ内へ映像を反映
   async function startVideo() {
     console.log('startVideo')
     const localVideo = document.getElementById('localVideo') as HTMLVideoElement
     localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: false})
-    playVideo(localVideo, localStream)
+    p2p.playVideo(localVideo, localStream)
   }
 
   // 自身のデバイスのカメラをオフにしてStreamを中断
   function stopVideo() {
     console.log('stopVideo')
     const localVideo = document.getElementById('localVideo') as HTMLVideoElement
-    pauseVideo(localVideo)
-    stopLocalStream(localStream)
+    p2p.pauseVideo(localVideo)
+    p2p.stopLocalStream(localStream)
   }
 
   // Start PeerConnection
   function connect() {
     console.log('connect')
     console.log('make Offer')
-    makeOffer(localStream)
+    p2p.makeOffer(localStream)
   }
   function hangup() {
     console.log('hangup')
-  }
-
-  // 対象のHTMLエレメントに対してMediaStreamを反映
-  function playVideo(element: HTMLMediaElement, stream: MediaStream) {
-    console.log('playVideo')
-    if ('srcObject' in element) {
-      if (! element.srcObject) {
-        element.srcObject = stream
-      } else {
-        console.log('stream alreay playing, so skip')
-      }
-    }
-    element.play()
-    element.volume = 0
-  }
-
-  // デバイスのカメラをオフ
-  function pauseVideo(element: HTMLMediaElement) {
-    element.pause()
-    if ('srcObject' in element) {
-      element.srcObject = null
-    }
-    else {
-      if (element.src && (element.src !== '') ) {
-        window.URL.revokeObjectURL(element.src)
-      }
-      element.src = ''
-    }
-  }
-
-  // Streamを中断
-  function stopLocalStream(stream: MediaStream) {
-    let tracks = stream.getTracks()
-    if (! tracks) {
-      console.warn('NO tracks')
-      return
-    }
-    for (let track of tracks) {
-      track.stop()
-    }
-  }
-
-  function prepareNewConnection(stream: MediaStream) {
-    let pc_config = {"iceServers":[]}
-    let peer = new RTCPeerConnection(pc_config)
-
-    // このロジックはReceiverで必要
-    // --- on get remote stream ---
-    if ('ontrack' in peer) {
-      // 【RTCPeerConnection.ontrack()】
-      // Peer接続が完了している状態でイベントが配信される
-      // RTCRtpReceiverに新しいTrackが追加されるとontrackのイベントハンドラへtrackイベントが送信される
-      // ※RTCRtpReceiverはRTCPeerConnection上のMediaStreamTrackのデータ受信とデコードを管理するもの
-      peer.ontrack = function(event) {
-        console.log('-- peer.ontrack()')
-        let stream = event.streams[0]
-        const remoteVideo = document.getElementById('remoteVideo') as HTMLVideoElement
-        playVideo(remoteVideo, stream)
-        if (event.streams.length > 1) {
-          console.warn('got multi-stream, but play only 1 stream')
-        }
-      }
-    }
-
-    // --- on get local ICE candidate
-    // 【RTCPeerConnection.onicecandidate()】
-    // RTCPeerConnection.setLocalDescription()の呼び出しによってRTCIceCandidateが識別され、
-    // ローカルPeerに追加されると、RTCPeerConnectionに送信される
-    peer.onicecandidate = function (evt) {
-      if (evt.candidate) {
-        console.log(evt.candidate)
-
-        // Trickle ICE の場合は、ICE candidateを相手に送る
-        // Vanilla ICE の場合には、何もしない
-      } else {
-        console.log('empty ice event')
-
-        // Trickle ICE の場合は、何もしない
-        // Vanilla ICE の場合には、ICE candidateを含んだSDPを相手に送る
-        displaySdp(peer.localDescription as RTCSessionDescription)
-      }
-    }
-
-    // -- add local stream --
-    if (stream) {
-      console.log('Adding local stream...')
-      if ('addTrack' in peer) {
-        console.log('use addTrack()')
-        let tracks = stream.getTracks()
-        for (let track of tracks) {
-          let sender = peer.addTrack(track, stream)
-        }
-      }
-    }
-    else {
-      console.warn('no local stream, but continue.')
-    }
-
-    return peer
-  }
-
-  function makeOffer(stream: MediaStream) {
-    if (peerConnection) {
-      console.warn('peer already exist.')
-      return
-    }
-    peerConnection = prepareNewConnection(stream)
-
-    let options = {}
-    // if: 片方のVideoを送信のみ（受信しない）設定にしたいときにアンコメント
-    // if (stream) {
-    //   console.log('-- try sendonly ---')
-    //   options = { offerToReceiveAudio: false, offerToReceiveVideo: false }
-    // }
-    // else: このロジックはReceiveで必要?（なくても動いた）
-    // else {
-    //   // -- no localStream, so receive --
-    //   console.log('-- try recvonly ---')
-
-    //   options = { offerToReceiveAudio: true, offerToReceiveVideo: true }
-
-    //   if ('addTransceiver' in peerConnection) {
-    //     console.log('-- use addTransceiver() for recvonly --')
-    //     peerConnection.addTransceiver('video', { direction: 'recvonly' })
-    //     peerConnection.addTransceiver('audio', { direction: 'recvonly' })
-    //   }
-    // }
-
-    // 【RTCPeerConnection.createOffer()】
-    // リモートPeerとの新しいWebRTC接続を開始するために、SDP Offerの生成を開始する
-    peerConnection.createOffer(options)
-    .then(function (sessionDescription) {
-      console.log('createOffer() succsess in promise')
-      // 【RTCPeerConnection.setLocalDescription()】
-      // 接続に関連付けられたローカルな記述を変更する
-      // 記述が変更されると非同期に実行される Promise を返す
-      return peerConnection.setLocalDescription(sessionDescription)
-    }).then(function() {
-      console.log('setLocalDescription() succsess in promise')
-
-      // -- Trickle ICE の場合は、初期SDPを相手に送る --
-      // -- Vanilla ICE の場合には、まだSDPは送らない --
-      //displaySdp(peerConnection.localDescription);
-    }).catch(function(err) {
-      console.error(err)
-    });
-  }
-
-  function setOffer(sessionDescription: RTCSessionDescription, stream: MediaStream) {
-    if (peerConnection) {
-      console.error('peerConnection alreay exist!')
-    }
-    peerConnection = prepareNewConnection(stream)
-    // 【RTCPeerConnection.setRemoteDescription()】
-    // 指定されたsessionDescriptionをリモートPeerの現在のOfferまたはAnswerとして設定する
-    // sessionDescriptionはメディア形式を含む、接続のリモート側のプロパティを指定する
-    // sessionDescriptionが変更されると、非同期で実行されるPromiseを返す
-    // 通常シグナリングサーバー上で他のPeerからOfferまたはAnswerを受信した後に呼び出される
-    peerConnection.setRemoteDescription(sessionDescription)
-    .then(function() {
-      console.log('setRemoteDescription(offer) succsess in promise')
-      makeAnswer(stream)
-    }).catch(function(err) {
-      console.error('setRemoteDescription(offer) ERROR: ', err)
-    })
-  }
-
-  function makeAnswer(stream: MediaStream) {
-    console.log('sending Answer. Creating remote session description...' )
-    if (! peerConnection) {
-      console.error('peerConnection NOT exist!')
-      return
-    }
-
-    let options = {}
-    if (! stream) {
-      //options = { offerToReceiveAudio: true, offerToReceiveVideo: true }
-
-      if ('addTransceiver' in peerConnection) {
-        console.log('-- use addTransceiver() for recvonly --')
-        // 【RTCPeerConnection.addTransceiver()】
-        // 新しい RTCRtpTransceiver を作成し、それを RTCPeerConnection に関連付けられたトランシーバーのセットに追加
-        // 各トランシーバは、RTCRtpSender と RTCRtpReceiver の両方が関連付けられた双方向のストリームを表し、
-        // RTCRtpSender と RTCRtpReceiver の両方は、それに関連付けられた双方向のストリームを表す
-        peerConnection.addTransceiver('video', { direction: 'recvonly' })
-        peerConnection.addTransceiver('audio', { direction: 'recvonly' })
-      }
-    }
-
-    // 【RTCPeerConnection.createAnswer()】
-    // WebRTC 接続のOffer/Answer交渉中に リモートピアから受け取ったOfferに対する SDP Answerを作成する
-    // Answerは返された Promise に配信され、ネゴシエーションプロセスを継続するために、Offerのソースに送信される必要がある
-    peerConnection.createAnswer(options)
-    .then(function (sessionDescription) {
-      console.log('createAnswer() succsess in promise')
-      return peerConnection.setLocalDescription(sessionDescription)
-    }).then(function() {
-      console.log('setLocalDescription() succsess in promise')
-
-      // -- Trickle ICE の場合は、初期SDPを相手に送る --
-      // -- Vanilla ICE の場合には、まだSDPは送らない --
-      //displaySdp(peerConnection.localDescription);
-    }).catch(function(err) {
-      console.error(err)
-    })
-  }
-
-  function displaySdp(sessionDescription: RTCSessionDescription) {
-    console.log('---sending sdp ---')
-    const textForDisplaySdp: HTMLTextAreaElement = document.getElementById('text_for_display_sdp') as HTMLTextAreaElement
-    textForDisplaySdp.value = sessionDescription.sdp
-    textForDisplaySdp.focus()
-    textForDisplaySdp.select()
   }
 
   function onSdpText() {
     const textToReceiveSdp = document.getElementById('text_for_receive_sdp') as HTMLTextAreaElement
     let text = textToReceiveSdp.value
     text = _trimTailDoubleLF(text); // for Safar TP --> Chrome
-    setRemoteDescriptionOfferAnswer(text, localStream)
+    p2p.setRemoteDescriptionOfferAnswer(text, localStream)
     textToReceiveSdp.value =''
-  }
-
-  function setAnswer(sessionDescription: RTCSessionDescription) {
-    if (! peerConnection) {
-      console.error('peerConnection NOT exist!')
-      return
-    }
-
-    peerConnection.setRemoteDescription(sessionDescription)
-    .then(function() {
-      console.log('setRemoteDescription(answer) succsess in promise')
-    }).catch(function(err) {
-      console.error('setRemoteDescription(answer) ERROR: ', err)
-    })
   }
 
   function _trimTailDoubleLF(str: string) {
     const trimed = str.trim()
     return trimed + String.fromCharCode(13, 10)
-  }
-
-  function setRemoteDescriptionOfferAnswer(sdpText: string, stream: MediaStream) {
-    if (peerConnection) {
-      console.log('Received answer text...')
-      let answer = new RTCSessionDescription({
-        type : 'answer',
-        sdp : sdpText,
-      })
-      setAnswer(answer)
-    }
-    else {
-      console.log('Received offer text...')
-      let offer = new RTCSessionDescription({
-        type : 'offer',
-        sdp : sdpText,
-      })
-      setOffer(offer, stream)
-    }
   }
 
   return (
