@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  app:
+  client:
     build: ./client
     tty: true
     # command: npm run dev
@@ -9,3 +9,11 @@ services:
       - ./client:/app
     ports:
       - "3000:3000"
+  server:
+    build: ./server
+    tty: true
+    command: go run main.go
+    volumes:
+      - ./server:/app
+    ports:
+      - "8080:8080"
