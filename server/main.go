@@ -23,12 +23,14 @@ func handleWebSocket(c echo.Context) error {
 			err = websocket.Message.Receive(ws, &msg)
 			if err != nil {
 				c.Logger().Error(err)
+        return
 			}
 
 			// Client からのメッセージを元に返すメッセージを作成し送信する
 			err := websocket.Message.Send(ws, fmt.Sprintf("Server: \"%s\" received!", msg))
 			if err != nil {
 				c.Logger().Error(err)
+        return
 			}
 		}
 	}).ServeHTTP(c.Response(), c.Request())
