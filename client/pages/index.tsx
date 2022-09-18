@@ -198,7 +198,7 @@ const P2P = function({ remoteVideoId = '', displaySdpId = '' }) {
 }
 
 const Home: NextPage = () => {
-  let localStream: MediaStream // TODO: スコープを狭く
+  let localStream: MediaStream
 
   const p2p = P2P({ remoteVideoId: 'remoteVideo', displaySdpId: 'text_for_display_sdp' })
 
