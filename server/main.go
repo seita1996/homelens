@@ -12,7 +12,7 @@ func handleWebSocket(c echo.Context) error {
 		defer ws.Close()
 
 		// 初回のメッセージを送信
-		err := websocket.Message.Send(ws, "Server: Hello, Client!")
+		err := websocket.Message.Send(ws, "ping")
 		if err != nil {
 			c.Logger().Error(err)
 		}

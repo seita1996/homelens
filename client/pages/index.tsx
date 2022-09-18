@@ -211,8 +211,11 @@ const Home: NextPage = () => {
     console.log(socketRef)
     socketRef.current.onopen = function() {
       setIsConnected(true)
-      socketRef.current?.send('メッセージ')
       console.log('Connected')
+    }
+    socketRef.current.onmessage = function(event) {
+      if(event.data === 'ping')
+      socketRef.current?.send('pong')
     }
     socketRef.current.onclose = function() {
       setIsConnected(false)
