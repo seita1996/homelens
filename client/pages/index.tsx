@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
 import styles from '../styles/Home.module.css'
 
 const P2P = function({ remoteVideoId = '', displaySdpId = '' }) {
@@ -202,6 +203,23 @@ const Home: NextPage = () => {
 
   const p2p = P2P({ remoteVideoId: 'remoteVideo', displaySdpId: 'text_for_display_sdp' })
 
+  const socketRef = useRef<WebSocket>()
+  const [isConnected, setIsConnected] = useState(false)
+
+  useEffect(() => {
+    socketRef.current = new WebSocket('ws://localhost:8081/ws')
+    console.log(socketRef)
+    socketRef.current.onopen = function() {
+      setIsConnected(true)
+      socketRef.current?.send('メッセージ')
+      console.log('Connected')
+    }
+    socketRef.current.onclose = function() {
+      setIsConnected(false)
+      console.log('Closed')
+    }
+  }, [])
+
   // 自身のデバイスのカメラをオンにしてvideoタグ内へ映像を反映
   async function startVideo() {
     console.log('startVideo')
@@ -276,6 +294,9 @@ const Home: NextPage = () => {
           <button type="button" onClick={onSdpText}>Receive remote SDP</button><br />
           <textarea id="text_for_receive_sdp" rows={5} cols={60}></textarea>
         </p>
+      </div>
+      <div>
+        <span>WebSocket is connected : {`${isConnected}`}</span>
       </div>
     </div>
   )
