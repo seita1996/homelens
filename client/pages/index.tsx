@@ -207,8 +207,7 @@ const Home: NextPage = () => {
   const [isConnected, setIsConnected] = useState(false)
 
   useEffect(() => {
-    // socketRef.current = new WebSocket('ws://localhost:8081/ws')
-    socketRef.current = new WebSocket('wss://homecam-server.fly.dev/ws')
+    socketRef.current = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET_SERVER_URL}/ws`)
     console.log(socketRef)
     socketRef.current.onopen = function() {
       setIsConnected(true)

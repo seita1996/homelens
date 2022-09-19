@@ -3,6 +3,8 @@ version: '3'
 services:
   client:
     build: ./client
+    environment:
+      - NEXT_PUBLIC_WEBSOCKET_SERVER_URL=ws://localhost:8081
     tty: true
     # command: npm run dev
     volumes:
