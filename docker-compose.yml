@@ -10,7 +10,9 @@ services:
     ports:
       - "3000:3000"
   server:
-    build: ./server
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
     tty: true
     command: go run main.go
     volumes:
