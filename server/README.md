@@ -1,12 +1,14 @@
 # homecam server
 
-## Tech
+## Development
 
 Using WebFramework [Echo](https://echo.labstack.com/)
 
+Hot Reload [Air](https://github.com/cosmtrek/air)
+
 ## Host
 
-Hosted on fly.io
+Hosted on [fly.io](https://fly.io/)
 
 ## Deploy
 

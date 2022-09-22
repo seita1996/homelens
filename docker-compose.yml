@@ -16,7 +16,7 @@ services:
       context: ./server
       dockerfile: Dockerfile.dev
     tty: true
-    command: go run main.go
+    # command: go run main.go
     volumes:
       - ./server:/app
     ports:

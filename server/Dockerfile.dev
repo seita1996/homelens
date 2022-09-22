@@ -8,8 +8,7 @@ RUN go mod download
 
 COPY *.go ./
 
-# RUN go build -o /websocket-server
-
 EXPOSE 8080
 
-# CMD [ "/websocket-server" ]
+RUN go install github.com/cosmtrek/air@latest
+CMD ["air"]
