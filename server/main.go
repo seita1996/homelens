@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+  "net/http"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"golang.org/x/net/websocket"
@@ -37,10 +38,15 @@ func handleWebSocket(c echo.Context) error {
 	return nil
 }
 
+func healthCheck(c echo.Context) error {
+  return c.String(http.StatusOK, "OK")
+}
+
 func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Static("/", "public")
+  e.GET("/hc", healthCheck)
 	e.GET("/ws", handleWebSocket)
 	e.Logger.Fatal(e.Start(":8080"))
 }
