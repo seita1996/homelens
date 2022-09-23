@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-  "net/http"
+	"net/http"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"golang.org/x/net/websocket"
@@ -24,14 +24,14 @@ func handleWebSocket(c echo.Context) error {
 			err = websocket.Message.Receive(ws, &msg)
 			if err != nil {
 				c.Logger().Error(err)
-        return
+				break
 			}
 
 			// Client からのメッセージを元に返すメッセージを作成し送信する
 			err := websocket.Message.Send(ws, fmt.Sprintf("Server: \"%s\" received!", msg))
 			if err != nil {
 				c.Logger().Error(err)
-        return
+				break
 			}
 		}
 	}).ServeHTTP(c.Response(), c.Request())
@@ -39,14 +39,14 @@ func handleWebSocket(c echo.Context) error {
 }
 
 func healthCheck(c echo.Context) error {
-  return c.String(http.StatusOK, "OK")
+	return c.String(http.StatusOK, "OK")
 }
 
 func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Static("/", "public")
-  e.GET("/hc", healthCheck)
+	e.GET("/hc", healthCheck)
 	e.GET("/ws", handleWebSocket)
 	e.Logger.Fatal(e.Start(":8080"))
 }
