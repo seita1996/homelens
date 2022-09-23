@@ -19,6 +19,8 @@ func handleWebSocket(c echo.Context) error {
 		}
 
 		for {
+			fmt.Println("接続元IP: " + c.RealIP())
+
 			// Client からのメッセージを読み込む
 			msg := ""
 			err = websocket.Message.Receive(ws, &msg)
