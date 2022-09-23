@@ -26,6 +26,7 @@ func handleWebSocket(c echo.Context) error {
 				c.Logger().Error(err)
 				break
 			}
+			fmt.Println("Receive: " + msg)
 
 			// Client からのメッセージを元に返すメッセージを作成し送信する
 			err := websocket.Message.Send(ws, fmt.Sprintf("Server: \"%s\" received!", msg))
@@ -33,6 +34,7 @@ func handleWebSocket(c echo.Context) error {
 				c.Logger().Error(err)
 				break
 			}
+			fmt.Println("Send: " + msg)
 		}
 	}).ServeHTTP(c.Response(), c.Request())
 	return nil
