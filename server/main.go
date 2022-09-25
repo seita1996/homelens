@@ -22,7 +22,7 @@ type Room struct {
 	clients	map[string]*Client	// All clients in the room
 }
 
-var rooms = make(map[string]Room)
+var rooms = make(map[string]*Room)
 
 func newRoom(name string) *Room {
 	fmt.Println("[newRoom()] New Room name: " + name)
@@ -35,10 +35,10 @@ func newRoom(name string) *Room {
 		fmt.Println("[newRoom()] The Room Exists")
 	} else {
 		fmt.Println("[newRoom()] Create New Room")
-		rooms[name] = *room
+		rooms[name] = room
 		printStruct("[newRoom()] Room num", len(rooms))
 	}
-	return room
+	return rooms[name]
 }
 
 func printStruct(title string, stru any) {
