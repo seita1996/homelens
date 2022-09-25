@@ -214,8 +214,13 @@ const Home: NextPage = () => {
       console.log('Connected')
     }
     socketRef.current.onmessage = function(event) {
-      if(event.data === 'ping')
-      socketRef.current?.send('pong')
+      // Executed only when connection is Open
+      // https://developer.mozilla.org/ja/docs/Web/API/WebSocket/readyState
+      if(socketRef.current?.readyState === 1) {
+        if(event.data === 'ping') {
+          socketRef.current?.send('pong')
+        }
+      }
     }
     socketRef.current.onclose = function() {
       setIsConnected(false)
