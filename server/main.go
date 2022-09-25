@@ -19,7 +19,7 @@ type Client struct {
 
 type Room struct {
 	forward	chan string			// With a message to send to all other clients
-	clients	map[string]Client	// All clients in the room
+	clients	map[string]*Client	// All clients in the room
 }
 
 var rooms = make(map[string]Room)
@@ -28,7 +28,7 @@ func newRoom(name string) *Room {
 	fmt.Println("[newRoom()] New Room name: " + name)
 	room := &Room {
 		forward:	make(chan string),
-		clients:	make(map[string]Client),
+		clients:	make(map[string]*Client),
 	}
 	printStruct("[newRoom()] Room num", len(rooms))
 	if _, ok := rooms[name]; ok {
@@ -47,16 +47,32 @@ func printStruct(title string, stru any) {
 }
 
 func (r *Room) join(c *Client) {
-	r.clients[c.name] = *c
+  fmt.Println("[join()] all Clients in the Room start")
+  for key := range r.clients {
+    printStruct("[join()] key", key)
+  }
+  fmt.Println("[join()] all Clients in the Room end")
 
-	// debug
+  fmt.Println("[handleWebSocket()] join!!!")
+	r.clients[c.name] = c
+
+  fmt.Println("[join()] all Clients in the Room start")
+  for key := range r.clients {
+    printStruct("[join()] key", key)
+  }
+  fmt.Println("[join()] all Clients in the Room end")
 	printStruct("[join()] c name", &c.name)
 }
 
 func (r *Room) leave(c *Client) {
+  fmt.Println("[handleWebSocket()] leave!!!")
 	delete(r.clients, c.name)
 
-	// debug
+  fmt.Println("[leave()] all Clients in the Room start")
+  for key := range r.clients {
+    printStruct("[leave()] key", key)
+  }
+  fmt.Println("[leave()] all Clients in the Room end")
 	printStruct("[leave()] c name", &c.name)
 }
 
@@ -73,13 +89,11 @@ func handleWebSocket(c echo.Context) error {
 			name:	time.Now().Format("2006-01-02 15:04:05"),
 		}
 		printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.RealIP()].clients))
-		fmt.Println("[handleWebSocket()] join!!!")
 		r.join(client)
 		printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.RealIP()].clients))
 
 		defer func() {
 			printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.RealIP()].clients))
-			fmt.Println("[handleWebSocket()] leave!!!")
 			r.leave(client)
 			printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.RealIP()].clients))
 		}()
