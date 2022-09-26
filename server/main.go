@@ -104,6 +104,25 @@ func handleWebSocket(c echo.Context) error {
 			c.Logger().Error(err)
 		}
 
+    // Send Your Name
+    yourname := "{ \"yourname\": " + client.name + " }"
+    err = websocket.Message.Send(ws, yourname)
+		if err != nil {
+			c.Logger().Error(err)
+		}
+
+    // Send User Name List in the Room
+    var nameList []string
+    for key := range r.clients {
+      nameList = append(nameList, key)
+    }
+    nameListJ, _ := json.Marshal(nameList)
+    err = websocket.Message.Send(ws, "{ \"namelist\": " + string(nameListJ) + " }")
+		if err != nil {
+			c.Logger().Error(err)
+		}
+
+
 		for {
 			fmt.Println("[handleWebSocket()] 接続元IP: " + c.RealIP())
 
