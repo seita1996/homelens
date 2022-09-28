@@ -1,7 +1,9 @@
 package main
 
 import (
+  "encoding/json"
 	"fmt"
+  "golang.org/x/net/websocket"
 )
 
 type Room struct {
@@ -42,6 +44,9 @@ func (r *Room) join(c *Client) {
   }
   fmt.Println("[join()] all Clients in the Room end")
 	printStruct("[join()] c name", &c.name)
+
+  // Send Clients list in the Room member
+  c.room.forward <- r.memberNames()
 }
 
 func (r *Room) leave(c *Client) {
@@ -54,4 +59,32 @@ func (r *Room) leave(c *Client) {
   }
   fmt.Println("[leave()] all Clients in the Room end")
 	printStruct("[leave()] c name", &c.name)
+
+  // Send Clients list in the Room member
+  c.room.forward <- r.memberNames()
+}
+
+func (r *Room) memberNames() string {
+  var nameList []string
+  for key := range r.clients {
+    nameList = append(nameList, key)
+  }
+  nameListJ, _ := json.Marshal(nameList)
+  return "{ \"namelist\": " + string(nameListJ) + " }"
+}
+
+func (r *Room) run() {
+  for {
+    select {
+    case message := <-r.forward:
+      fmt.Println("[run()] message: " + message)
+      for _, client := range r.clients {
+        // TODO: Websocket is placed only in Client
+        err := websocket.Message.Send(client.socket, message)
+        if err != nil {
+          fmt.Println(err)
+        }
+      }
+    }
+  }
 }

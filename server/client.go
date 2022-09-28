@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
   "github.com/labstack/echo/v4"
@@ -21,6 +20,7 @@ func handleWebSocket(c echo.Context) error {
 
 		fmt.Println("[handleWebSocket()] 接続元IP: " + c.RealIP())
 		r := newRoom(c.RealIP())
+    go r.run()
 		client := &Client {
 			socket: ws,
 			send:   make(chan string),
@@ -50,18 +50,6 @@ func handleWebSocket(c echo.Context) error {
 			c.Logger().Error(err)
 		}
 
-    // Send User Name List in the Room
-    var nameList []string
-    for key := range r.clients {
-      nameList = append(nameList, key)
-    }
-    nameListJ, _ := json.Marshal(nameList)
-    err = websocket.Message.Send(ws, "{ \"namelist\": " + string(nameListJ) + " }")
-		if err != nil {
-			c.Logger().Error(err)
-		}
-
-
 		for {
 			fmt.Println("[handleWebSocket()] 接続元IP: " + c.RealIP())
 
@@ -72,7 +60,7 @@ func handleWebSocket(c echo.Context) error {
 				c.Logger().Error(err)
 				break
 			}
-			client.room.forward <- msg
+			// client.room.forward <- msg
 			fmt.Println("[handleWebSocket()] Receive: " + msg)
 
 			// Create a message to return based on the message from Client and send it
