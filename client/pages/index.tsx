@@ -315,7 +315,10 @@ const Home: NextPage = () => {
         <span>WebSocket is connected : {`${isConnected}`}</span>
       </div>
       <div>
-        <span>Room List : {`${nameList}`}</span>
+        <span>Room List</span>
+        <div className={styles.flexSpaceAround}>
+          { nameList.map((clientName) => <div className={styles.btn}>{clientName.toString()}</div>)}
+        </div>
       </div>
     </div>
   )
