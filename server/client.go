@@ -38,13 +38,13 @@ func handleWebSocket(c echo.Context) error {
 		}()
 
 		// Send initial message
-		err := websocket.Message.Send(ws, "ping")
+		err := websocket.Message.Send(ws, "{ \"type\": \"ping\" }")
 		if err != nil {
 			c.Logger().Error(err)
 		}
 
     // Send Your Name
-    yourname := "{ \"yourname\": " + client.name + " }"
+    yourname := "{ \"type\": \"yourname\", \"data\": \"" + client.name + "\" }"
     err = websocket.Message.Send(ws, yourname)
 		if err != nil {
 			c.Logger().Error(err)
@@ -64,12 +64,12 @@ func handleWebSocket(c echo.Context) error {
 			fmt.Println("[handleWebSocket()] Receive: " + msg)
 
 			// Create a message to return based on the message from Client and send it
-			err := websocket.Message.Send(ws, fmt.Sprintf("Server: \"%s\" received!", msg))
-			if err != nil {
-				c.Logger().Error(err)
-				break
-			}
-			fmt.Println("[handleWebSocket()] Send: " + msg)
+			// err := websocket.Message.Send(ws, fmt.Sprintf("Server: \"%s\" received!", msg))
+			// if err != nil {
+			// 	c.Logger().Error(err)
+			// 	break
+			// }
+			// fmt.Println("[handleWebSocket()] Send: " + msg)
 		}
 	}).ServeHTTP(c.Response(), c.Request())
 	return nil

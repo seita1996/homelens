@@ -70,7 +70,7 @@ func (r *Room) memberNames() string {
     nameList = append(nameList, key)
   }
   nameListJ, _ := json.Marshal(nameList)
-  return "{ \"namelist\": " + string(nameListJ) + " }"
+  return "{ \"type\": \"namelist\", \"data\": " + string(nameListJ) + " }"
 }
 
 func (r *Room) run() {

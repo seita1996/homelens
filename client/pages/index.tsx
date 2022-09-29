@@ -205,6 +205,7 @@ const Home: NextPage = () => {
 
   const socketRef = useRef<WebSocket>()
   const [isConnected, setIsConnected] = useState(false)
+  const [nameList, setNameList] = useState<object[]>([])
 
   useEffect(() => {
     socketRef.current = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET_SERVER_URL}/ws`)
@@ -217,8 +218,15 @@ const Home: NextPage = () => {
       // Executed only when connection is Open
       // https://developer.mozilla.org/ja/docs/Web/API/WebSocket/readyState
       if(socketRef.current?.readyState === 1) {
-        if(event.data === 'ping') {
-          socketRef.current?.send('pong')
+        const resData = JSON.parse(event.data)
+        if(resData.type === 'ping') {
+          socketRef.current?.send('{ "type": "pong" }')
+        }
+        if(resData.type === 'yourname') {
+          console.log('yourname', resData.data)
+        }
+        if(resData.type === 'namelist') {
+          setNameList([...nameList, ...resData.data])
         }
       }
     }
@@ -305,6 +313,9 @@ const Home: NextPage = () => {
       </div>
       <div>
         <span>WebSocket is connected : {`${isConnected}`}</span>
+      </div>
+      <div>
+        <span>Room List : {`${nameList}`}</span>
       </div>
     </div>
   )
