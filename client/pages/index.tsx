@@ -317,7 +317,7 @@ const Home: NextPage = () => {
       <div>
         <span>Room List</span>
         <div className={styles.flexSpaceAround}>
-          { nameList.map((clientName) => <div className={styles.btn}>{clientName.toString()}</div>)}
+          { nameList.map((clientName, i) => <div key={`clientName${i}`} className={styles.btn}>{clientName.toString()}</div>)}
         </div>
       </div>
     </div>
