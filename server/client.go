@@ -1,6 +1,7 @@
 package main
 
 import (
+  // "encoding/json"
 	"fmt"
 	"time"
   "github.com/labstack/echo/v4"
@@ -18,8 +19,10 @@ func handleWebSocket(c echo.Context) error {
 	websocket.Handler(func(ws *websocket.Conn) {
 		defer ws.Close()
 
-		fmt.Println("[handleWebSocket()] 接続元IP: " + c.RealIP())
-		r := newRoom(c.RealIP())
+    // For IPoE connections, IPv4 addresses cannot be obtained, so the value sent after obtaining the address from the Client is used.
+    // TODO: あくまでc.RealIP()の値を優先し、ipv6形式であればQueryParamを採用するロジックにする
+		fmt.Println("[handleWebSocket()] 接続元IP: " + c.QueryParam("ipv4"))
+		r := newRoom(c.QueryParam("ipv4"))
     go r.run()
 		client := &Client {
 			socket: ws,
@@ -27,18 +30,18 @@ func handleWebSocket(c echo.Context) error {
 			room:   r,
 			name:	time.Now().Format("2006-01-02 15:04:05"),
 		}
-		printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.RealIP()].clients))
+		printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.QueryParam("ipv4")].clients))
 		r.join(client)
-		printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.RealIP()].clients))
+		printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.QueryParam("ipv4")].clients))
 
 		defer func() {
-			printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.RealIP()].clients))
+			printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.QueryParam("ipv4")].clients))
 			r.leave(client)
-			printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.RealIP()].clients))
+			printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.QueryParam("ipv4")].clients))
 		}()
 
 		// Send initial message
-		err := websocket.Message.Send(ws, "{ \"type\": \"ping\" }")
+		err := websocket.Message.Send(ws, "{ \"type\": \"healthcheck\", \"data\": \"ping\" }")
 		if err != nil {
 			c.Logger().Error(err)
 		}
@@ -51,7 +54,7 @@ func handleWebSocket(c echo.Context) error {
 		}
 
 		for {
-			fmt.Println("[handleWebSocket()] 接続元IP: " + c.RealIP())
+			fmt.Println("[handleWebSocket()] 接続元IP: " + c.QueryParam("ipv4"))
 
 			// Read messages from Client
 			msg := ""
@@ -63,13 +66,17 @@ func handleWebSocket(c echo.Context) error {
 			// client.room.forward <- msg
 			fmt.Println("[handleWebSocket()] Receive: " + msg)
 
-			// Create a message to return based on the message from Client and send it
-			// err := websocket.Message.Send(ws, fmt.Sprintf("Server: \"%s\" received!", msg))
-			// if err != nil {
-			// 	c.Logger().Error(err)
-			// 	break
-			// }
-			// fmt.Println("[handleWebSocket()] Send: " + msg)
+      // type Message struct {
+      //   Type string
+      //   Data string
+      // }
+      // var m Message
+      // if err := json.Unmarshal([]byte(msg), &m); err != nil {
+      //   panic(err)
+      // }
+      // fmt.Print(m)
+      // fmt.Println("[handleWebSocket()] Receive type: " + m.Type)
+      // fmt.Println("[handleWebSocket()] Receive data: " + m.Data)
 		}
 	}).ServeHTTP(c.Response(), c.Request())
 	return nil

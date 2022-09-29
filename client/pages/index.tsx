@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import styles from '../styles/Home.module.css'
+import { publicIpv4 } from 'public-ip'
 
 const P2P = function({ remoteVideoId = '', displaySdpId = '' }) {
   let peerConnection: RTCPeerConnection
@@ -208,32 +209,37 @@ const Home: NextPage = () => {
   const [nameList, setNameList] = useState<object[]>([])
 
   useEffect(() => {
-    socketRef.current = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET_SERVER_URL}/ws`)
-    console.log(socketRef)
-    socketRef.current.onopen = function() {
-      setIsConnected(true)
-      console.log('Connected')
-    }
-    socketRef.current.onmessage = function(event) {
-      // Executed only when connection is Open
-      // https://developer.mozilla.org/ja/docs/Web/API/WebSocket/readyState
-      if(socketRef.current?.readyState === 1) {
-        const resData = JSON.parse(event.data)
-        if(resData.type === 'ping') {
-          socketRef.current?.send('{ "type": "pong" }')
-        }
-        if(resData.type === 'yourname') {
-          console.log('yourname', resData.data)
-        }
-        if(resData.type === 'namelist') {
-          setNameList([...nameList, ...resData.data])
+    (async () => {
+      // IPv4 address cannot be obtained for IPoE connection, so it is sent after obtaining it with Client.
+      const ipv4 = await publicIpv4()
+      console.log('global ipv4 address', ipv4)
+      socketRef.current = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET_SERVER_URL}/ws?ipv4=${ipv4}`)
+      console.log(socketRef)
+      socketRef.current.onopen = function() {
+        setIsConnected(true)
+        console.log('Connected')
+      }
+      socketRef.current.onmessage = function(event) {
+        // Executed only when connection is Open
+        // https://developer.mozilla.org/ja/docs/Web/API/WebSocket/readyState
+        if(socketRef.current?.readyState === 1) {
+          const resData = JSON.parse(event.data)
+          if(resData.type === 'healthcheck' && resData.data === 'ping') {
+            socketRef.current?.send('{ "type": "healthcheck", "data": "pong" }')
+          }
+          if(resData.type === 'yourname') {
+            console.log('yourname', resData.data)
+          }
+          if(resData.type === 'namelist') {
+            setNameList([...nameList, ...resData.data])
+          }
         }
       }
-    }
-    socketRef.current.onclose = function() {
-      setIsConnected(false)
-      console.log('Closed')
-    }
+      socketRef.current.onclose = function() {
+        setIsConnected(false)
+        console.log('Closed')
+      }
+    })()
   }, [])
 
   // 自身のデバイスのカメラをオンにしてvideoタグ内へ映像を反映
