@@ -16,7 +16,7 @@ Install flyctl
 
 ```
 $ curl -L https://fly.io/install.sh | sh
-$ export FLYCTL_INSTALL="/home/seita/.fly"
+$ export FLYCTL_INSTALL="/home/username/.fly"
 $ export PATH="$FLYCTL_INSTALL/bin:$PATH"
 ```
 
