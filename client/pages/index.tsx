@@ -207,6 +207,7 @@ const Home: NextPage = () => {
   const socketRef = useRef<WebSocket>()
   const [isConnected, setIsConnected] = useState(false)
   const [nameList, setNameList] = useState<object[]>([])
+  const [myName, setMyName] = useState('')
 
   useEffect(() => {
     (async () => {
@@ -229,6 +230,7 @@ const Home: NextPage = () => {
           }
           if(resData.type === 'yourname') {
             console.log('yourname', resData.data)
+            setMyName(resData.data)
           }
           if(resData.type === 'namelist') {
             setNameList([...nameList, ...resData.data])
@@ -281,6 +283,27 @@ const Home: NextPage = () => {
     return trimed + String.fromCharCode(13, 10)
   }
 
+  function startExchangeSDP(clientName: string) {
+    if (clientName === myName) {
+      console.error('×startExchangeSDP')
+      return
+    }
+    console.log('startExchangeSDP')
+  }
+
+  function decorateClientName(clientName: string) {
+    if (clientName === myName) {
+      return clientName + '(me)'
+    }
+    return clientName
+  }
+
+  function displayClientList(list: any) {
+    return list.map(function (clientName: string, i: number) {
+      return <div key={`clientName${i}`} className={styles.btn} onClick={() => startExchangeSDP(clientName)}>{decorateClientName(clientName)}</div>
+    })
+  }
+
   return (
     <div>
       <Head>
@@ -323,7 +346,7 @@ const Home: NextPage = () => {
       <div>
         <span>Room List</span>
         <div className={styles.flexSpaceAround}>
-          { nameList.map((clientName, i) => <div key={`clientName${i}`} className={styles.btn}>{clientName.toString()}</div>)}
+          { displayClientList(nameList) }
         </div>
       </div>
     </div>
