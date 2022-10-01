@@ -9,6 +9,7 @@ const P2P = function({ remoteVideoId = '', displaySdpId = '' }) {
   let peerConnection: RTCPeerConnection
 
   return {
+    sdp: '',
     // 対象のHTMLエレメントに対してMediaStreamを反映
     playVideo: function(element: HTMLMediaElement, stream: MediaStream) {
       console.log('playVideo')
@@ -195,6 +196,9 @@ const P2P = function({ remoteVideoId = '', displaySdpId = '' }) {
       textForDisplaySdp.value = sessionDescription.sdp
       textForDisplaySdp.focus()
       textForDisplaySdp.select()
+
+      this.sdp = sessionDescription.sdp
+      // console.log('sdp', sdp)
     }
   }
 }
@@ -283,12 +287,33 @@ const Home: NextPage = () => {
     return trimed + String.fromCharCode(13, 10)
   }
 
-  function startExchangeSDP(clientName: string) {
+  async function startExchangeSDP(clientName: string) {
     if (clientName === myName) {
+      // TODO: Launch Settings Modal
       console.error('×startExchangeSDP')
       return
     }
     console.log('startExchangeSDP')
+    // start video
+    await startVideo()
+    // connect
+    connect()
+    // send sdp
+    sendSdp(clientName)
+  }
+
+  function sendSdp(clientName: string) {
+    let previousValue = p2p.sdp
+    const observe = function() {
+      const value = p2p.sdp
+      if(previousValue === value) return
+      if(socketRef.current?.readyState === 1) {
+        // Send value to Peer when SDP value is set
+        socketRef.current?.send(`{ "type": "sdp", "data": "${p2p.sdp}", target: "${clientName}" }`)
+      }
+      previousValue = p2p.sdp
+    }
+    setInterval(observe, 500)
   }
 
   function decorateClientName(clientName: string) {
