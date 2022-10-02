@@ -5,6 +5,26 @@ import { useEffect, useRef, useState } from 'react'
 import styles from '../styles/Home.module.css'
 import { publicIpv4 } from 'public-ip'
 
+const Compression = function() {
+  const Buffer = require('buffer').Buffer
+  const zlib = require('zlib')
+
+  return {
+    gzip: function(str: string){
+        const content = encodeURIComponent(str)
+        const result = zlib.gzipSync(content)
+        const value = result.toString('base64')
+        return value
+    },
+    unzip: function(value: string){
+        const buffer = Buffer.from(value, 'base64')
+        const result = zlib.unzipSync(buffer)
+        const str = decodeURIComponent(result).toString() // Add 'utf-8' argument if necessary
+        return str
+    }
+  }
+}
+
 const P2P = function({ remoteVideoId = '', displaySdpId = '' }) {
   let peerConnection: RTCPeerConnection
 
@@ -207,6 +227,7 @@ const Home: NextPage = () => {
   let localStream: MediaStream
 
   const p2p = P2P({ remoteVideoId: 'remoteVideo', displaySdpId: 'text_for_display_sdp' })
+  const compression = Compression()
 
   const socketRef = useRef<WebSocket>()
   const [isConnected, setIsConnected] = useState(false)
@@ -309,7 +330,7 @@ const Home: NextPage = () => {
       if(previousValue === value) return
       if(socketRef.current?.readyState === 1) {
         // Send value to Peer when SDP value is set
-        socketRef.current?.send(`{ "type": "sdp", "data": "${p2p.sdp}", target: "${clientName}" }`)
+        socketRef.current?.send(`{ "type": "sdp", "data": "${compression.gzip(p2p.sdp)}", "target": "${clientName}" }`)
       }
       previousValue = p2p.sdp
     }
