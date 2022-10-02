@@ -251,14 +251,17 @@ const Home: NextPage = () => {
         if(socketRef.current?.readyState === 1) {
           const resData = JSON.parse(event.data)
           if(resData.type === 'healthcheck' && resData.data === 'ping') {
-            socketRef.current?.send('{ "type": "healthcheck", "data": "pong" }')
+            socketRef.current?.send('{ "type": "healthcheck", "data": "pong", "target": "" }')
           }
-          if(resData.type === 'yourname') {
+          else if(resData.type === 'yourname') {
             console.log('yourname', resData.data)
             setMyName(resData.data)
           }
-          if(resData.type === 'namelist') {
+          else if(resData.type === 'namelist') {
             setNameList([...nameList, ...resData.data])
+          }
+          else if(resData.type === 'sdp') {
+            console.log(compression.unzip(resData.data))
           }
         }
       }

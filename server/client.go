@@ -1,7 +1,6 @@
 package main
 
 import (
-  "encoding/json"
 	"fmt"
 	"time"
   "github.com/labstack/echo/v4"
@@ -63,21 +62,8 @@ func handleWebSocket(c echo.Context) error {
 				c.Logger().Error(err)
 				break
 			}
-			// client.room.forward <- msg
 			fmt.Println("[handleWebSocket()] Receive: " + msg)
-
-      type Message struct {
-        Type string
-        Data string
-        Target string
-      }
-      var m Message
-      if err := json.Unmarshal([]byte(msg), &m); err != nil {
-        panic(err)
-      }
-      fmt.Println("[handleWebSocket()] Receive type: " + m.Type)
-      fmt.Println("[handleWebSocket()] Receive data: " + m.Data)
-      fmt.Println("[handleWebSocket()] Receive target: " + m.Target)
+			client.room.forward <- msg
 		}
 	}).ServeHTTP(c.Response(), c.Request())
 	return nil
