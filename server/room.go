@@ -78,11 +78,21 @@ func (r *Room) run() {
     select {
     case message := <-r.forward:
       fmt.Println("[run()] message: " + message)
+      type Message struct {
+        Type string
+        Target string
+      }
+      var m Message
+      if err := json.Unmarshal([]byte(message), &m); err != nil {
+        panic(err)
+      }
       for _, client := range r.clients {
-        // TODO: Websocket is placed only in Client
-        err := websocket.Message.Send(client.socket, message)
-        if err != nil {
-          fmt.Println(err)
+        if m.Type != "healthcheck" && (m.Target == "" || m.Target == client.name) {
+          // TODO: Websocket is placed only in Client
+          err := websocket.Message.Send(client.socket, message)
+          if err != nil {
+            fmt.Println(err)
+          }
         }
       }
     }
