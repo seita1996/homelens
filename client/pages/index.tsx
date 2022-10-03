@@ -261,7 +261,8 @@ const Home: NextPage = () => {
             setNameList([...nameList, ...resData.data])
           }
           else if(resData.type === 'sdp') {
-            console.log(compression.unzip(resData.data))
+            const resSdp = compression.unzip(resData.data)
+            onReceiveSdp(resSdp, resData.from)
           }
         }
       }
@@ -306,13 +307,26 @@ const Home: NextPage = () => {
     textToReceiveSdp.value =''
   }
 
+  async function onReceiveSdp(resSdp: string, from: string) {
+    if (from !== '') {
+      // Outbound trip
+      await startVideo()
+      sendSdp(from, '')
+      p2p.setRemoteDescriptionOfferAnswer(resSdp, localStream)
+    } else {
+      // Return trip
+      const textToReceiveSdp = document.getElementById('text_for_receive_sdp') as HTMLTextAreaElement
+      textToReceiveSdp.value = resSdp
+    }
+  }
+
   function _trimTailDoubleLF(str: string) {
     const trimed = str.trim()
     return trimed + String.fromCharCode(13, 10)
   }
 
-  async function startExchangeSDP(clientName: string) {
-    if (clientName === myName) {
+  async function startExchangeSDP(targetClientName: string) {
+    if (targetClientName === myName) {
       // TODO: Launch Settings Modal
       console.error('×startExchangeSDP')
       return
@@ -323,17 +337,17 @@ const Home: NextPage = () => {
     // connect
     connect()
     // send sdp
-    sendSdp(clientName)
+    sendSdp(targetClientName, myName)
   }
 
-  function sendSdp(clientName: string) {
+  function sendSdp(targetClientName: string, fromClientName: string) {
     let previousValue = p2p.sdp
     const observe = function() {
       const value = p2p.sdp
       if(previousValue === value) return
       if(socketRef.current?.readyState === 1) {
         // Send value to Peer when SDP value is set
-        socketRef.current?.send(`{ "type": "sdp", "data": "${compression.gzip(p2p.sdp)}", "target": "${clientName}" }`)
+        socketRef.current?.send(`{ "type": "sdp", "data": "${compression.gzip(p2p.sdp)}", "target": "${targetClientName}", "from": "${fromClientName}" }`)
       }
       previousValue = p2p.sdp
     }
