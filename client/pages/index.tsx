@@ -375,14 +375,6 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.title}>homecam</div>
-      <div className={styles.flexSpaceAround}>
-        <div className={styles.btn}>
-          <Link href='/sender'>Sender</Link>
-        </div>
-        <div className={styles.btn}>
-          <Link href='/receiver'>Receiver</Link>
-        </div>
-      </div>
       <div>
         <button onClick={startVideo}>Start Video</button>
         <button onClick={stopVideo}>Stop Video</button>
@@ -412,6 +404,7 @@ const Home: NextPage = () => {
           { displayClientList(nameList) }
         </div>
       </div>
+      <Link href='/terms'>Terms</Link>
     </div>
   )
 }
