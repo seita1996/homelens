@@ -4,26 +4,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import styles from '../styles/Home.module.css'
 import { publicIpv4 } from 'public-ip'
-
-const Compression = function() {
-  const Buffer = require('buffer').Buffer
-  const zlib = require('zlib')
-
-  return {
-    gzip: function(str: string){
-        const content = encodeURIComponent(str)
-        const result = zlib.gzipSync(content)
-        const value = result.toString('base64')
-        return value
-    },
-    unzip: function(value: string){
-        const buffer = Buffer.from(value, 'base64')
-        const result = zlib.unzipSync(buffer)
-        const str = decodeURIComponent(result).toString() // Add 'utf-8' argument if necessary
-        return str
-    }
-  }
-}
+import { gzip, unzip } from '../lib/compression'
 
 const P2P = function({ remoteVideoId = '' }) {
   let peerConnection: RTCPeerConnection
@@ -221,7 +202,6 @@ let localStream: MediaStream
 let receivedSdp: string
 const Home: NextPage = () => {
   const p2p = P2P({ remoteVideoId: 'remoteVideo' })
-  const compression = Compression()
 
   const socketRef = useRef<WebSocket>()
   const [isConnected, setIsConnected] = useState(false)
@@ -255,7 +235,7 @@ const Home: NextPage = () => {
             setNameList([...nameList, ...resData.data])
           }
           else if(resData.type === 'sdp') {
-            const resSdp = compression.unzip(resData.data)
+            const resSdp = unzip(resData.data)
             onReceiveSdp(resSdp, resData.from)
           }
         }
@@ -335,7 +315,7 @@ const Home: NextPage = () => {
       if(previousValue === value) return
       if(socketRef.current?.readyState === 1) {
         // Send value to Peer when SDP value is set
-        socketRef.current?.send(`{ "type": "sdp", "data": "${compression.gzip(p2p.sdp)}", "target": "${targetClientName}", "from": "${fromClientName}" }`)
+        socketRef.current?.send(`{ "type": "sdp", "data": "${gzip(p2p.sdp)}", "target": "${targetClientName}", "from": "${fromClientName}" }`)
       }
       previousValue = p2p.sdp
     }
