@@ -25,7 +25,7 @@ const Compression = function() {
   }
 }
 
-const P2P = function({ remoteVideoId = '', displaySdpId = '' }) {
+const P2P = function({ remoteVideoId = '' }) {
   let peerConnection: RTCPeerConnection
 
   return {
@@ -189,7 +189,7 @@ const P2P = function({ remoteVideoId = '', displaySdpId = '' }) {
           console.log('empty ice event')
           // Trickle ICE の場合は、何もしない
           // Vanilla ICE の場合には、ICE candidateを含んだSDPを相手に送る
-          _this.displaySdp(peer.localDescription as RTCSessionDescription)
+          _this.setSdp(peer.localDescription as RTCSessionDescription)
         }
       }
       // -- add local stream --
@@ -210,22 +210,17 @@ const P2P = function({ remoteVideoId = '', displaySdpId = '' }) {
       return peer
     },
 
-    displaySdp: function(sessionDescription: RTCSessionDescription) {
-      console.log('---sending sdp ---')
-      const textForDisplaySdp: HTMLTextAreaElement = document.getElementById(displaySdpId) as HTMLTextAreaElement
-      textForDisplaySdp.value = sessionDescription.sdp
-      textForDisplaySdp.focus()
-      textForDisplaySdp.select()
-
+    setSdp: function(sessionDescription: RTCSessionDescription) {
+      console.log('---set sdp ---')
       this.sdp = sessionDescription.sdp
-      // console.log('sdp', sdp)
     }
   }
 }
 
 let localStream: MediaStream
+let receivedSdp: string
 const Home: NextPage = () => {
-  const p2p = P2P({ remoteVideoId: 'remoteVideo', displaySdpId: 'text_for_display_sdp' })
+  const p2p = P2P({ remoteVideoId: 'remoteVideo' })
   const compression = Compression()
 
   const socketRef = useRef<WebSocket>()
@@ -294,16 +289,11 @@ const Home: NextPage = () => {
     console.log('make Offer')
     p2p.makeOffer(localStream)
   }
-  function hangup() {
-    console.log('hangup')
-  }
 
-  function onSdpText() {
-    const textToReceiveSdp = document.getElementById('text_for_receive_sdp') as HTMLTextAreaElement
-    let text = textToReceiveSdp.value
-    text = _trimTailDoubleLF(text); // for Safar TP --> Chrome
+  function startInteractiveStreaming() {
+    const text = _trimTailDoubleLF(receivedSdp); // for Safar TP --> Chrome
     p2p.setRemoteDescriptionOfferAnswer(text, localStream)
-    textToReceiveSdp.value =''
+    receivedSdp = ''
   }
 
   async function onReceiveSdp(resSdp: string, from: string) {
@@ -314,8 +304,7 @@ const Home: NextPage = () => {
       p2p.setRemoteDescriptionOfferAnswer(resSdp, localStream)
     } else {
       // Return trip
-      const textToReceiveSdp = document.getElementById('text_for_receive_sdp') as HTMLTextAreaElement
-      textToReceiveSdp.value = resSdp
+      receivedSdp = resSdp
     }
   }
 
@@ -375,24 +364,11 @@ const Home: NextPage = () => {
       </Head>
       <div className={styles.title}>homecam</div>
       <div>
-        <button onClick={startVideo}>Start Video</button>
         <button onClick={stopVideo}>Stop Video</button>
-        <button onClick={connect}>Connect</button>
-        <button onClick={hangup}>Hang Up</button>
       </div>
       <div>
         <video id="localVideo" className={styles.videoBox} muted autoPlay playsInline></video>
         <video id="remoteVideo" className={styles.videoBox} muted autoPlay playsInline></video>
-      </div>
-      <div>
-        <p>SDP to send:&nbsp;
-          <button type="button">copy local SDP</button><br />
-          <textarea id="text_for_display_sdp" rows={5} cols={60} readOnly={true}>SDP to send</textarea>
-        </p>
-        <p>SDP to receive:&nbsp;
-          <button type="button" onClick={onSdpText}>Receive remote SDP</button><br />
-          <textarea id="text_for_receive_sdp" rows={5} cols={60}></textarea>
-        </p>
       </div>
       <div>
         <span>WebSocket is connected : {`${isConnected}`}</span>
@@ -402,6 +378,9 @@ const Home: NextPage = () => {
         <div className={styles.flexSpaceAround}>
           { displayClientList(nameList) }
         </div>
+      </div>
+      <div>
+        <button onClick={startInteractiveStreaming}>Start Streaming</button>
       </div>
       <Link href='/terms'>Terms</Link>
     </div>
