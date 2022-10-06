@@ -15,6 +15,7 @@ const Home: NextPage = () => {
   const [isConnected, setIsConnected] = useState(false)
   const [nameList, setNameList] = useState<object[]>([])
   const [myName, setMyName] = useState('')
+  const [stopButtonVisible, setStopButtonVisible] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -61,6 +62,7 @@ const Home: NextPage = () => {
     const localVideo = document.getElementById('localVideo') as HTMLVideoElement
     localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: false})
     playVideo(localVideo, localStream)
+    setStopButtonVisible(true)
   }
 
   // 自身のデバイスのカメラをオフにしてStreamを中断
@@ -69,6 +71,7 @@ const Home: NextPage = () => {
     const localVideo = document.getElementById('localVideo') as HTMLVideoElement
     pauseVideo(localVideo)
     stopLocalStream(localStream)
+    setStopButtonVisible(false)
   }
 
   // Start PeerConnection
@@ -150,6 +153,13 @@ const Home: NextPage = () => {
     })
   }
 
+  function stopButton() {
+    if(stopButtonVisible) {
+      return <button onClick={stopVideo}>Stop Video</button>
+    }
+    return <div></div>
+  }
+
   return (
     <div>
       <Head>
@@ -159,7 +169,7 @@ const Home: NextPage = () => {
       </Head>
       <div className={styles.title}>homecam</div>
       <div>
-        <button onClick={stopVideo}>Stop Video</button>
+        {stopButton()}
       </div>
       <div>
         <video id="localVideo" className={styles.videoBox} muted autoPlay playsInline></video>
