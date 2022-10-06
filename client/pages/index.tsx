@@ -93,6 +93,13 @@ const Home: NextPage = () => {
     } else {
       // Return trip
       receivedSdp = resSdp
+
+      const startStreaming = confirm('通信を開始しますか？')
+      if(startStreaming) {
+        startInteractiveStreaming()
+      } else {
+        stopVideo()
+      }
     }
   }
 
@@ -166,9 +173,6 @@ const Home: NextPage = () => {
         <div className={styles.flexSpaceAround}>
           { displayClientList(nameList) }
         </div>
-      </div>
-      <div>
-        <button onClick={startInteractiveStreaming}>Start Streaming</button>
       </div>
       <Link href='/terms'>Terms</Link>
     </div>
