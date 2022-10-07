@@ -60,7 +60,7 @@ const Home: NextPage = () => {
   async function startVideo() {
     console.log('startVideo')
     const localVideo = document.getElementById('localVideo') as HTMLVideoElement
-    localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: false})
+    localStream = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}, audio: false})
     playVideo(localVideo, localStream)
     setStopButtonVisible(true)
   }
