@@ -155,7 +155,7 @@ const Home: NextPage = () => {
 
   function stopButton() {
     if(stopButtonVisible) {
-      return <button onClick={stopVideo}>Stop Video</button>
+      return <button className={styles.stopBtn} onClick={stopVideo}>停止</button>
     }
     return <div></div>
   }
@@ -169,11 +169,11 @@ const Home: NextPage = () => {
       </Head>
       <div className={styles.title}>homecam</div>
       <div>
-        {stopButton()}
+        <video id="remoteVideo" className={styles.remoteVideoBox} muted autoPlay playsInline></video>
       </div>
       <div>
-        <video id="localVideo" className={styles.videoBox} muted autoPlay playsInline></video>
-        <video id="remoteVideo" className={styles.videoBox} muted autoPlay playsInline></video>
+        <video id="localVideo" className={styles.localVideoBox} muted autoPlay playsInline></video>
+        {stopButton()}
       </div>
       <div>
         <span>WebSocket is connected : {`${isConnected}`}</span>

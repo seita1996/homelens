@@ -21,7 +21,28 @@
   justify-content: space-around;
 }
 
-.videoBox {
+.localVideoBox {
+  display: block;
+  width: 200px;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  border-radius: 10px;
+}
+
+.remoteVideoBox {
   display: block;
   margin: 0 auto;
+  border-radius: 10px;
+}
+
+.stopBtn {
+  background-color: white;
+  border: none;
+  border-radius: 5px;
+  color: black;
+  cursor: pointer;
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
 }
