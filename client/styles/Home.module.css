@@ -1,8 +1,9 @@
 .title {
   color: white;
-  font-size: 10vw;
-  text-align: center;
-  margin-bottom: 100px;
+  font-size: 3vw;
+  text-align: left;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
 .btn {

@@ -16,6 +16,7 @@ const Home: NextPage = () => {
   const [nameList, setNameList] = useState<object[]>([])
   const [myName, setMyName] = useState('')
   const [stopButtonVisible, setStopButtonVisible] = useState(false)
+  const [clientListVisible, setClientListVisible] = useState(true)
 
   useEffect(() => {
     (async () => {
@@ -88,6 +89,7 @@ const Home: NextPage = () => {
   }
 
   async function onReceiveSdp(resSdp: string, from: string) {
+    setClientListVisible(false)
     if (from !== '') {
       // Outbound trip
       await startVideo()
@@ -160,6 +162,20 @@ const Home: NextPage = () => {
     return <div></div>
   }
 
+  function clientList() {
+    if(clientListVisible) {
+      return (
+        <div>
+          <span>通信可能な端末</span>
+          <div className={styles.flexSpaceAround}>
+            { displayClientList(nameList) }
+          </div>
+        </div>
+      )
+    }
+    return <div></div>
+  }
+
   return (
     <div>
       <Head>
@@ -178,12 +194,7 @@ const Home: NextPage = () => {
       <div>
         <span>WebSocket is connected : {`${isConnected}`}</span>
       </div>
-      <div>
-        <span>Room List</span>
-        <div className={styles.flexSpaceAround}>
-          { displayClientList(nameList) }
-        </div>
-      </div>
+      {clientList()}
       <Link href='/terms'>Terms</Link>
     </div>
   )
