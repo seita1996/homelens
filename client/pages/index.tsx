@@ -197,9 +197,6 @@ const Home: NextPage = () => {
         <video id="localVideo" className={styles.localVideoBox} muted autoPlay playsInline></video>
         {stopButton()}
       </div>
-      <div>
-        <span>WebSocket is connected : {`${isConnected}`}</span>
-      </div>
       {reloadButton()}
       {clientList()}
       <Link href='/terms'>Terms</Link>
