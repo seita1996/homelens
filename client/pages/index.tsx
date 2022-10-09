@@ -163,7 +163,7 @@ const Home: NextPage = () => {
   }
 
   function clientList() {
-    if(clientListVisible) {
+    if(clientListVisible && isConnected) {
       return (
         <div>
           <span>通信可能な端末</span>
@@ -174,6 +174,12 @@ const Home: NextPage = () => {
       )
     }
     return <div></div>
+  }
+
+  function reloadButton() {
+    if(!isConnected) {
+      return <button onClick={() => location.reload()}>再読み込み</button>
+    }
   }
 
   return (
@@ -194,6 +200,7 @@ const Home: NextPage = () => {
       <div>
         <span>WebSocket is connected : {`${isConnected}`}</span>
       </div>
+      {reloadButton()}
       {clientList()}
       <Link href='/terms'>Terms</Link>
     </div>
