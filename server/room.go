@@ -4,6 +4,7 @@ import (
   "encoding/json"
 	"fmt"
   "golang.org/x/net/websocket"
+  "strings"
 )
 
 type Room struct {
@@ -12,7 +13,9 @@ type Room struct {
 }
 
 func newRoom(name string) *Room {
-	fmt.Println("[newRoom()] New Room name: " + name)
+  escapedName := strings.Replace(name, "\n", "", -1)
+  escapedName = strings.Replace(escapedName, "\r", "", -1)
+	fmt.Println("[newRoom()] New Room name: " + escapedName)
 	room := &Room {
 		forward:	make(chan string),
 		clients:	make(map[string]*Client),

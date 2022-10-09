@@ -5,6 +5,7 @@ import (
 	"time"
   "github.com/labstack/echo/v4"
 	"golang.org/x/net/websocket"
+  "strings"
 )
 
 type Client struct {
@@ -20,7 +21,9 @@ func handleWebSocket(c echo.Context) error {
 
     // For IPoE connections, IPv4 addresses cannot be obtained, so the value sent after obtaining the address from the Client is used.
     // TODO: あくまでc.RealIP()の値を優先し、ipv6形式であればQueryParamを採用するロジックにする
-		fmt.Println("[handleWebSocket()] 接続元IP: " + c.QueryParam("ipv4"))
+    escapedIp := strings.Replace(c.QueryParam("ipv4"), "\n", "", -1)
+    escapedIp = strings.Replace(escapedIp, "\r", "", -1)
+		fmt.Println("[handleWebSocket()] 接続元IP: " + escapedIp)
 		r := newRoom(c.QueryParam("ipv4"))
     go r.run()
 		client := &Client {
@@ -53,7 +56,7 @@ func handleWebSocket(c echo.Context) error {
 		}
 
 		for {
-			fmt.Println("[handleWebSocket()] 接続元IP: " + c.QueryParam("ipv4"))
+			fmt.Println("[handleWebSocket()] 接続元IP: " + escapedIp)
 
 			// Read messages from Client
 			msg := ""
@@ -62,7 +65,7 @@ func handleWebSocket(c echo.Context) error {
 				c.Logger().Error(err)
 				break
 			}
-			fmt.Println("[handleWebSocket()] Receive: " + msg)
+			// fmt.Println("[handleWebSocket()] Receive: " + msg)
 			client.room.forward <- msg
 		}
 	}).ServeHTTP(c.Response(), c.Request())
