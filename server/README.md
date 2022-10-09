@@ -10,6 +10,12 @@ Hot Reload [Air](https://github.com/cosmtrek/air)
 
 Hosted on [fly.io](https://fly.io/)
 
+## Testing
+
+```
+$ go test
+```
+
 ## Deploy
 
 Install flyctl
