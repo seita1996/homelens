@@ -2,14 +2,18 @@ name: Go
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ "main" ]
 
 jobs:
 
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: server
     steps:
     - uses: actions/checkout@v3
 
