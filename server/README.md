@@ -13,7 +13,7 @@ Hosted on [fly.io](https://fly.io/)
 ## Testing
 
 ```
-$ go test
+$ go test -v
 ```
 
 ## Deploy
