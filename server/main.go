@@ -58,7 +58,10 @@ func handleWebSocket(c echo.Context) error {
 
     // Send Your Name
     yourname := "{ \"type\": \"yourname\", \"data\": \"" + client.name + "\" }"
-    client.room.forward <- yourname
+    err = writeMessage(ws, yourname)
+		if err != nil {
+			c.Logger().Error(err)
+		}
 
     // Standby to receive messages
     client.run()
