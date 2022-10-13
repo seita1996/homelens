@@ -3,7 +3,6 @@ package main
 import (
   "encoding/json"
 	"fmt"
-  "golang.org/x/net/websocket"
   "strings"
 )
 
@@ -26,26 +25,12 @@ func newRoom(name string) *Room {
 	} else {
 		fmt.Println("[newRoom()] Create New Room")
 		rooms[name] = room
-		printStruct("[newRoom()] Room num", len(rooms))
 	}
 	return rooms[name]
 }
 
 func (r *Room) join(c *Client) {
-  fmt.Println("[join()] all Clients in the Room start")
-  for key := range r.clients {
-    printStruct("[join()] key", key)
-  }
-  fmt.Println("[join()] all Clients in the Room end")
-
-  fmt.Println("[handleWebSocket()] join!!!")
 	r.clients[c.name] = c
-
-  fmt.Println("[join()] all Clients in the Room start")
-  for key := range r.clients {
-    printStruct("[join()] key", key)
-  }
-  fmt.Println("[join()] all Clients in the Room end")
 	printStruct("[join()] c name", &c.name)
 
   // Send Clients list in the Room member
@@ -53,14 +38,7 @@ func (r *Room) join(c *Client) {
 }
 
 func (r *Room) leave(c *Client) {
-  fmt.Println("[handleWebSocket()] leave!!!")
 	delete(r.clients, c.name)
-
-  fmt.Println("[leave()] all Clients in the Room start")
-  for key := range r.clients {
-    printStruct("[leave()] key", key)
-  }
-  fmt.Println("[leave()] all Clients in the Room end")
 	printStruct("[leave()] c name", &c.name)
 
   // Send Clients list in the Room member
@@ -91,8 +69,7 @@ func (r *Room) run() {
       }
       for _, client := range r.clients {
         if m.Type != "healthcheck" && (m.Target == "" || m.Target == client.name) {
-          // TODO: Websocket is placed only in Client
-          err := websocket.Message.Send(client.socket, message)
+          err := writeMessage(client.socket, message)
           if err != nil {
             fmt.Println(err)
           }
