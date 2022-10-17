@@ -6,17 +6,6 @@
   margin-left: 10px;
 }
 
-.btn {
-  padding: 30px;
-  font-size: 2vw;
-  font-weight: bold;
-  background-color: white;
-  border-color: white;
-  color: #9198e5;
-  cursor: pointer;
-  box-shadow: 8px 8px 2px 1px rgba(0, 0, 255, .2);
-}
-
 .flexSpaceAround {
   display: flex;
   justify-content: space-around;

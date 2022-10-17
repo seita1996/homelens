@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import Clients from '@/components/Clients'
 import styles from '../styles/Home.module.css'
 import { publicIpv4 } from 'public-ip'
 import { gzip, unzip } from '../lib/compression'
@@ -142,19 +143,6 @@ const Home: NextPage = () => {
     setInterval(observe, 500)
   }
 
-  function decorateClientName(clientName: string) {
-    if (clientName === myName) {
-      return clientName + '(me)'
-    }
-    return clientName
-  }
-
-  function displayClientList(list: any) {
-    return list.map(function (clientName: string, i: number) {
-      return <div key={`clientName${i}`} className={styles.btn} onClick={() => startExchangeSDP(clientName)}>{decorateClientName(clientName)}</div>
-    })
-  }
-
   function stopButton() {
     if(stopButtonVisible) {
       return <button className={styles.stopBtn} onClick={stopVideo}>停止</button>
@@ -168,7 +156,7 @@ const Home: NextPage = () => {
         <div>
           <span>通信可能な端末</span>
           <div className={styles.flexSpaceAround}>
-            { displayClientList(nameList) }
+            <Clients clientList={nameList} myName={myName} startExchangeSDP={startExchangeSDP} />
           </div>
         </div>
       )
