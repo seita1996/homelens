@@ -114,12 +114,12 @@ const Home: NextPage = () => {
     return trimed + String.fromCharCode(13, 10)
   }
 
+  function launchSettingsModal(name: string) {
+    // TODO: Launch Settings Modal
+    alert(name)
+  }
+
   async function startExchangeSDP(targetClientName: string) {
-    if (targetClientName === myName) {
-      // TODO: Launch Settings Modal
-      console.error('×startExchangeSDP')
-      return
-    }
     console.log('startExchangeSDP')
     // start video
     await startVideo()
@@ -156,7 +156,7 @@ const Home: NextPage = () => {
         <div>
           <span>通信可能な端末</span>
           <div className={styles.flexSpaceAround}>
-            <Clients clientList={nameList} myName={myName} startExchangeSDP={startExchangeSDP} />
+            <Clients clientList={nameList} myName={myName} clientsOnClick={startExchangeSDP} meOnClick={launchSettingsModal} />
           </div>
         </div>
       )
