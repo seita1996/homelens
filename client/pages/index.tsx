@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import Button from '@/components/Button'
 import Clients from '@/components/Clients'
 import styles from '../styles/Home.module.css'
 import { publicIpv4 } from 'public-ip'
@@ -12,6 +13,7 @@ let localStream: MediaStream
 let receivedSdp: string
 const Home: NextPage = () => {
 
+  const localVideoElementRef = useRef<HTMLVideoElement>(null)
   const socketRef = useRef<WebSocket>()
   const [isConnected, setIsConnected] = useState(false)
   const [nameList, setNameList] = useState<object[]>([])
@@ -61,7 +63,7 @@ const Home: NextPage = () => {
   // 自身のデバイスのカメラをオンにしてvideoタグ内へ映像を反映
   async function startVideo() {
     console.log('startVideo')
-    const localVideo = document.getElementById('localVideo') as HTMLVideoElement
+    const localVideo = localVideoElementRef.current as HTMLVideoElement
     localStream = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}, audio: false})
     playVideo(localVideo, localStream)
     setStopButtonVisible(true)
@@ -70,7 +72,7 @@ const Home: NextPage = () => {
   // 自身のデバイスのカメラをオフにしてStreamを中断
   function stopVideo() {
     console.log('stopVideo')
-    const localVideo = document.getElementById('localVideo') as HTMLVideoElement
+    const localVideo = localVideoElementRef.current as HTMLVideoElement
     pauseVideo(localVideo)
     stopLocalStream(localStream)
     setStopButtonVisible(false)
@@ -143,13 +145,6 @@ const Home: NextPage = () => {
     setInterval(observe, 500)
   }
 
-  function stopButton() {
-    if(stopButtonVisible) {
-      return <button className={styles.stopBtn} onClick={stopVideo}>停止</button>
-    }
-    return <div></div>
-  }
-
   function clientList() {
     if(clientListVisible && isConnected) {
       return (
@@ -164,12 +159,6 @@ const Home: NextPage = () => {
     return <div></div>
   }
 
-  function reloadButton() {
-    if(!isConnected) {
-      return <button onClick={() => location.reload()}>再読み込み</button>
-    }
-  }
-
   return (
     <div>
       <Head>
@@ -182,10 +171,10 @@ const Home: NextPage = () => {
         <video id="remoteVideo" className={styles.remoteVideoBox} muted autoPlay playsInline></video>
       </div>
       <div>
-        <video id="localVideo" className={styles.localVideoBox} muted autoPlay playsInline></video>
-        {stopButton()}
+        <video id="localVideo" className={styles.localVideoBox} ref={localVideoElementRef} muted autoPlay playsInline></video>
+        <Button text={'停止'} class={styles.stopBtn} visible={stopButtonVisible} onClickAction={stopVideo} />
       </div>
-      {reloadButton()}
+      <Button text={'再読み込み'} class={''} visible={!isConnected} onClickAction={() => location.reload()} />
       {clientList()}
       <Link href='/terms'>Terms</Link>
     </div>
