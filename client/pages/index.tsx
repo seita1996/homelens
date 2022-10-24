@@ -86,8 +86,7 @@ const Home: NextPage = () => {
   }
 
   function startInteractiveStreaming() {
-    const text = _trimTailDoubleLF(receivedSdp); // for Safar TP --> Chrome
-    setRemoteDescriptionOfferAnswer(text, localStream)
+    setRemoteDescriptionOfferAnswer(receivedSdp, localStream)
     receivedSdp = ''
   }
 
@@ -109,11 +108,6 @@ const Home: NextPage = () => {
         stopVideo()
       }
     }
-  }
-
-  function _trimTailDoubleLF(str: string) {
-    const trimed = str.trim()
-    return trimed + String.fromCharCode(13, 10)
   }
 
   function launchSettingsModal(name: string) {
