@@ -17,33 +17,16 @@ export function playVideo(element: HTMLMediaElement, stream: MediaStream) {
   element.volume = 0
 }
 
-// Turn off the device's camera
-export function pauseVideo(element: HTMLMediaElement) {
-  element.pause()
-  if ('srcObject' in element) {
-    element.srcObject = null
-  }
-  else {
-    if (element.src && (element.src !== '') ) {
-      window.URL.revokeObjectURL(element.src)
-    }
-    element.src = ''
-  }
+export function stopVideo(element: HTMLMediaElement, stream: MediaStream) {
+  pauseVideo(element)
+  stopLocalStream(stream)
 }
 
-// Suspend Stream
-export function stopLocalStream(stream: MediaStream) {
-  let tracks = stream.getTracks()
-  if (! tracks) {
-    console.warn('NO tracks')
-    return
-  }
-  for (let track of tracks) {
-    track.stop()
-  }
+export function connect(stream: MediaStream) {
+  makeOffer(stream)
 }
 
-export function setRemoteDescriptionOfferAnswer(sdpText: string, stream: MediaStream) {
+export function webrtcSignaling(sdpText: string, stream: MediaStream) {
   if (peerConnection) {
     console.log('Received answer text...')
     let answer = new RTCSessionDescription({
@@ -59,6 +42,36 @@ export function setRemoteDescriptionOfferAnswer(sdpText: string, stream: MediaSt
       sdp : sdpText,
     })
     setOffer(offer, stream)
+  }
+}
+
+// -----------------------
+// --- private methods ---
+// -----------------------
+
+// Turn off the device's camera
+function pauseVideo(element: HTMLMediaElement) {
+  element.pause()
+  if ('srcObject' in element) {
+    element.srcObject = null
+  }
+  else {
+    if (element.src && (element.src !== '') ) {
+      window.URL.revokeObjectURL(element.src)
+    }
+    element.src = ''
+  }
+}
+
+// Suspend Stream
+function stopLocalStream(stream: MediaStream) {
+  let tracks = stream.getTracks()
+  if (! tracks) {
+    console.warn('NO tracks')
+    return
+  }
+  for (let track of tracks) {
+    track.stop()
   }
 }
 
@@ -116,7 +129,7 @@ function makeAnswer(stream: MediaStream) {
   })
 }
 
-export function makeOffer(stream: MediaStream) {
+function makeOffer(stream: MediaStream) {
   if (peerConnection) {
     console.warn('peer already exist.')
     return

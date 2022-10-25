@@ -7,7 +7,7 @@ import Clients from '@/components/Clients'
 import styles from '../styles/Home.module.css'
 import { publicIpv4 } from 'public-ip'
 import { gzip, unzip } from '../lib/compression'
-import { sdp, playVideo, pauseVideo, stopLocalStream, setRemoteDescriptionOfferAnswer, makeOffer } from '../lib/p2p'
+import { sdp, playVideo, stopVideo, connect, webrtcSignaling } from '../lib/p2p'
 
 let localStream: MediaStream
 let receivedSdp: string
@@ -61,8 +61,8 @@ const Home: NextPage = () => {
   }, [])
 
   // 自身のデバイスのカメラをオンにしてvideoタグ内へ映像を反映
-  async function startVideo() {
-    console.log('startVideo')
+  async function turnOnVideo() {
+    console.log('turnOnVideo')
     const localVideo = localVideoElementRef.current as HTMLVideoElement
     localStream = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}, audio: false})
     playVideo(localVideo, localStream)
@@ -70,23 +70,21 @@ const Home: NextPage = () => {
   }
 
   // 自身のデバイスのカメラをオフにしてStreamを中断
-  function stopVideo() {
-    console.log('stopVideo')
+  function turnOffVideo() {
+    console.log('turnOffVideo')
     const localVideo = localVideoElementRef.current as HTMLVideoElement
-    pauseVideo(localVideo)
-    stopLocalStream(localStream)
+    stopVideo(localVideo, localStream)
     setStopButtonVisible(false)
   }
 
   // Start PeerConnection
-  function connect() {
+  function startPeerConnection() {
     console.log('connect')
-    console.log('make Offer')
-    makeOffer(localStream)
+    connect(localStream)
   }
 
   function startInteractiveStreaming() {
-    setRemoteDescriptionOfferAnswer(receivedSdp, localStream)
+    webrtcSignaling(receivedSdp, localStream)
     receivedSdp = ''
   }
 
@@ -94,9 +92,9 @@ const Home: NextPage = () => {
     setClientListVisible(false)
     if (from !== '') {
       // Outbound trip
-      await startVideo()
+      await turnOnVideo()
       sendSdp(from, '')
-      setRemoteDescriptionOfferAnswer(resSdp, localStream)
+      webrtcSignaling(resSdp, localStream)
     } else {
       // Return trip
       receivedSdp = resSdp
@@ -105,7 +103,7 @@ const Home: NextPage = () => {
       if(startStreaming) {
         startInteractiveStreaming()
       } else {
-        stopVideo()
+        turnOffVideo()
       }
     }
   }
@@ -117,11 +115,8 @@ const Home: NextPage = () => {
 
   async function startExchangeSDP(targetClientName: string) {
     console.log('startExchangeSDP')
-    // start video
-    await startVideo()
-    // connect
-    connect()
-    // send sdp
+    await turnOnVideo()
+    startPeerConnection()
     sendSdp(targetClientName, myName)
   }
 
@@ -166,7 +161,7 @@ const Home: NextPage = () => {
       </div>
       <div>
         <video id="localVideo" className={styles.localVideoBox} ref={localVideoElementRef} muted autoPlay playsInline></video>
-        <Button text={'停止'} class={styles.stopBtn} visible={stopButtonVisible} onClickAction={stopVideo} />
+        <Button text={'停止'} class={styles.stopBtn} visible={stopButtonVisible} onClickAction={turnOffVideo} />
       </div>
       <Button text={'再読み込み'} class={''} visible={!isConnected} onClickAction={() => location.reload()} />
       {clientList()}
