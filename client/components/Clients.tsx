@@ -1,6 +1,7 @@
 import styles from '../styles/Clients.module.css'
 
-const Clients = (props: { clientList: {name: string, ua: string}[], myName: string, clientsOnClick: Function, meOnClick: Function }) => {
+// TODO: clientList's type is {name: string, ua: string}[]. However, if you specify it, the component cannot be called.
+const Clients = (props: { clientList: any, myName: string, clientsOnClick: Function, meOnClick: Function }) => {
   return props.clientList.map(function (client: {name: string, ua: string}, i: number) {
     return (
       <div key={`client${i}`}>
