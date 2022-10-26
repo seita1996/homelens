@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+  "github.com/mssola/user_agent"
   "golang.org/x/net/websocket"
   "strings"
 )
@@ -33,6 +34,12 @@ func handleWebSocket(c echo.Context) error {
 		fmt.Println("[handleWebSocket()] 接続元IP: " + escapedIp)
 		r := newRoom(c.QueryParam("ipv4"))
 
+    ua := user_agent.New(c.Request().Header.Get("User-Agent"))
+    fmt.Println("[handleWebSocket()] UA: " + ua.Platform())
+    browser_name, _ := ua.Browser()
+    fmt.Println("[handleWebSocket()] UA: " + browser_name)
+    ua_text := ua.Platform() + " " + browser_name
+
     // Processes Messages sent to a specific Room
     go r.run()
 
@@ -41,6 +48,7 @@ func handleWebSocket(c echo.Context) error {
 			send:   make(chan string),
 			room:   r,
 			name:	time.Now().Format("2006-01-02 15:04:05"),
+      ua: ua_text,
 		}
 		r.join(client)
 		printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.QueryParam("ipv4")].clients))

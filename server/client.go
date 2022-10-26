@@ -10,6 +10,7 @@ type Client struct {
 	send	chan string		// Channel to send a message to the browser
 	room	*Room			// The chat room to which the client belongs
 	name	string
+  ua  string
 }
 
 func writeMessage(ws *websocket.Conn, message string) error {
