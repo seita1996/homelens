@@ -34,7 +34,7 @@ func (r *Room) join(c *Client) {
 	printStruct("[join()] c name", &c.name)
 
   // Send Clients list in the Room member
-  c.room.forward <- r.memberNames()
+  c.room.forward <- r.members()
 }
 
 func (r *Room) leave(c *Client) {
@@ -42,16 +42,16 @@ func (r *Room) leave(c *Client) {
 	printStruct("[leave()] c name", &c.name)
 
   // Send Clients list in the Room member
-  c.room.forward <- r.memberNames()
+  c.room.forward <- r.members()
 }
 
-func (r *Room) memberNames() string {
-  var nameList []string
-  for key := range r.clients {
-    nameList = append(nameList, key)
+func (r *Room) members() string {
+  var memberList []string
+  for _, value := range r.clients {
+    memberList = append(memberList, "{ \"name\": \"" + value.name + "\", \"ua\": \"" + value.ua + "\" }")
   }
-  nameListJ, _ := json.Marshal(nameList)
-  return "{ \"type\": \"namelist\", \"data\": " + string(nameListJ) + " }"
+  memberListJ, _ := json.Marshal(memberList)
+  return "{ \"type\": \"memberlist\", \"data\": " + string(memberListJ) + " }"
 }
 
 func (r *Room) run() {

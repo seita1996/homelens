@@ -1,20 +1,25 @@
 import styles from '../styles/Clients.module.css'
 
-// TODO: stop using any type
-const Clients = (props: { clientList: any, myName: string, clientsOnClick: Function, meOnClick: Function }) => {
-  return props.clientList.map(function (clientName: string, i: number) {
+const Clients = (props: { clientList: {name: string, ua: string}[], myName: string, clientsOnClick: Function, meOnClick: Function }) => {
+  return props.clientList.map(function (client: {name: string, ua: string}, i: number) {
     return (
-      <div key={`clientName${i}`} className={styles.btn}
-        onClick={
-          () => {
-            if (clientName === props.myName) {
-              props.meOnClick(clientName)
-            } else {
-              props.clientsOnClick(clientName)
+      <div key={`client${i}`}>
+        <div key={`clientName${i}`} className={styles.btn}
+          onClick={
+            () => {
+              if (client.name === props.myName) {
+                props.meOnClick(client.name)
+              } else {
+                props.clientsOnClick(client.name)
+              }
             }
-          }
-        }>
-        {decorateClientName(clientName, props.myName)}
+          }>
+          {decorateClientName(client.name, props.myName)}
+          <br />
+        </div>
+        <div key={`clientUA${i}`}>
+          {client.ua}
+        </div>
       </div>
     )
   })

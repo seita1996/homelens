@@ -16,7 +16,7 @@ const Home: NextPage = () => {
   const localVideoElementRef = useRef<HTMLVideoElement>(null)
   const socketRef = useRef<WebSocket>()
   const [isConnected, setIsConnected] = useState(false)
-  const [nameList, setNameList] = useState<object[]>([])
+  const [memberList, setMemberList] = useState<{name: string, ua: string}[]>([])
   const [myName, setMyName] = useState('')
   const [stopButtonVisible, setStopButtonVisible] = useState(false)
   const [clientListVisible, setClientListVisible] = useState(true)
@@ -44,8 +44,9 @@ const Home: NextPage = () => {
             console.log('yourname', resData.data)
             setMyName(resData.data)
           }
-          else if(resData.type === 'namelist') {
-            setNameList([...nameList, ...resData.data])
+          else if(resData.type === 'memberlist') {
+            resData.data.map((el: string) => console.log('json', JSON.parse(el)))
+            setMemberList([...memberList, ...resData.data.map((element: string) => JSON.parse(element))])
           }
           else if(resData.type === 'sdp') {
             const resSdp = unzip(resData.data)
@@ -140,7 +141,7 @@ const Home: NextPage = () => {
         <div>
           <span>通信可能な端末</span>
           <div className={styles.flexSpaceAround}>
-            <Clients clientList={nameList} myName={myName} clientsOnClick={startExchangeSDP} meOnClick={launchSettingsModal} />
+            <Clients clientList={memberList} myName={myName} clientsOnClick={startExchangeSDP} meOnClick={launchSettingsModal} />
           </div>
         </div>
       )
