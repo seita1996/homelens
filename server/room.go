@@ -3,6 +3,7 @@ package main
 import (
   "encoding/json"
 	"fmt"
+  "strconv"
   "strings"
 )
 
@@ -48,7 +49,7 @@ func (r *Room) leave(c *Client) {
 func (r *Room) members() string {
   var memberList []string
   for _, value := range r.clients {
-    memberList = append(memberList, "{ \"name\": \"" + value.name + "\", \"ua\": \"" + value.ua + "\" }")
+    memberList = append(memberList, "{ \"name\": \"" + value.name + "\", \"ua\": \"" + value.ua + "\", \"mobile\": \"" + strconv.FormatBool(value.mobile) + "\" }")
   }
   memberListJ, _ := json.Marshal(memberList)
   return "{ \"type\": \"memberlist\", \"data\": " + string(memberListJ) + " }"

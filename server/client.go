@@ -11,6 +11,7 @@ type Client struct {
 	room	*Room			// The chat room to which the client belongs
 	name	string
   ua  string
+  mobile bool
 }
 
 func writeMessage(ws *websocket.Conn, message string) error {

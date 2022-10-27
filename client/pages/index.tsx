@@ -16,7 +16,7 @@ const Home: NextPage = () => {
   const localVideoElementRef = useRef<HTMLVideoElement>(null)
   const socketRef = useRef<WebSocket>()
   const [isConnected, setIsConnected] = useState(false)
-  const [memberList, setMemberList] = useState<{name: string, ua: string}[]>([])
+  const [memberList, setMemberList] = useState<{name: string, ua: string, mobile: string}[]>([])
   const [myName, setMyName] = useState('')
   const [stopButtonVisible, setStopButtonVisible] = useState(false)
   const [clientListVisible, setClientListVisible] = useState(true)
@@ -139,7 +139,6 @@ const Home: NextPage = () => {
     if(clientListVisible && isConnected) {
       return (
         <div>
-          <span>通信可能な端末</span>
           <div className={styles.flexSpaceAround}>
             <Clients clientList={memberList} myName={myName} clientsOnClick={startExchangeSDP} meOnClick={launchSettingsModal} />
           </div>

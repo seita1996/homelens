@@ -49,6 +49,7 @@ func handleWebSocket(c echo.Context) error {
 			room:   r,
 			name:	time.Now().Format("2006-01-02 15:04:05"),
       ua: ua_text,
+      mobile: ua.Mobile(),
 		}
 		r.join(client)
 		printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.QueryParam("ipv4")].clients))
