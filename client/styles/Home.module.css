@@ -1,6 +1,6 @@
 .title {
   color: white;
-  font-size: 3vw;
+  font-size: 32px;
   text-align: left;
   margin-top: 10px;
   margin-left: 10px;
@@ -9,6 +9,11 @@
 .flexSpaceAround {
   display: flex;
   justify-content: space-around;
+}
+
+.flexSpaceBetween {
+  display: flex;
+  justify-content: space-between;
 }
 
 .localVideoBox {
@@ -35,4 +40,11 @@
   position: fixed;
   right: 30px;
   bottom: 30px;
+}
+
+.iconBox {
+  color: white;
+  margin-top: 18px;
+  margin-right: 20px;
+  cursor: pointer;
 }
