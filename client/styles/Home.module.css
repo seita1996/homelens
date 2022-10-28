@@ -23,12 +23,14 @@
   right: 20px;
   bottom: 20px;
   border-radius: 10px;
+  box-shadow: -4px -1px 15px 3px rgba(0, 0, 255, .2);
 }
 
 .remoteVideoBox {
   display: block;
   margin: 0 auto;
   border-radius: 10px;
+  box-shadow: -4px -1px 15px 3px rgba(0, 0, 255, .2);
 }
 
 .stopBtn {

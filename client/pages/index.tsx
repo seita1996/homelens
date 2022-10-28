@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ReactSVG } from 'react-svg'
 import Button from '@/components/Button'
 import Clients from '@/components/Clients'
+import Sidebar from '@/components/Sidebar'
 import styles from '../styles/Home.module.css'
 import { publicIpv4 } from 'public-ip'
 import { gzip, unzip } from '../lib/compression'
@@ -21,6 +22,7 @@ const Home: NextPage = () => {
   const [myName, setMyName] = useState('')
   const [stopButtonVisible, setStopButtonVisible] = useState(false)
   const [clientListVisible, setClientListVisible] = useState(true)
+  const [sidebarVisible, setSidebarVisible] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -111,7 +113,11 @@ const Home: NextPage = () => {
   }
 
   function openSideBar() {
-    alert('hoge')
+    setSidebarVisible(true)
+  }
+
+  function closeSideBar() {
+    setSidebarVisible(false)
   }
 
   function launchSettingsModal(name: string) {
@@ -176,6 +182,7 @@ const Home: NextPage = () => {
       <Button text={'再読み込み'} class={''} visible={!isConnected} onClickAction={() => location.reload()} />
       {clientList()}
       <Link href='/terms'>Terms</Link>
+      <Sidebar visible={sidebarVisible} closeSideBar={closeSideBar} />
     </div>
   )
 }
