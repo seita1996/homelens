@@ -1,6 +1,6 @@
 .sideBox {
   background-color: white;
-  width: 75%;
+  width: 350px;
   height: 100%;
   text-align: center;
   position: fixed;
@@ -27,4 +27,10 @@
 .flexSpaceBetween {
   display: flex;
   justify-content: space-between;
+}
+
+.content {
+  margin-top: 50px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
