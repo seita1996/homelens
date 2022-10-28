@@ -2,6 +2,8 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { useRecoilValue } from 'recoil'
+import { facingModeState } from '@/states/rootStates/userState'
 import { ReactSVG } from 'react-svg'
 import Button from '@/components/Button'
 import Clients from '@/components/Clients'
@@ -23,6 +25,8 @@ const Home: NextPage = () => {
   const [stopButtonVisible, setStopButtonVisible] = useState(false)
   const [clientListVisible, setClientListVisible] = useState(true)
   const [sidebarVisible, setSidebarVisible] = useState(false)
+
+  const facingMode = useRecoilValue(facingModeState)
 
   useEffect(() => {
     (async () => {
@@ -68,7 +72,7 @@ const Home: NextPage = () => {
   async function turnOnVideo() {
     console.log('turnOnVideo')
     const localVideo = localVideoElementRef.current as HTMLVideoElement
-    localStream = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}, audio: false})
+    localStream = await navigator.mediaDevices.getUserMedia({video: {facingMode: facingMode}, audio: false})
     playVideo(localVideo, localStream)
     setStopButtonVisible(true)
   }

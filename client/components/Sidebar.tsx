@@ -2,12 +2,21 @@ import styles from '../styles/Sidebar.module.css'
 import { ReactSVG } from 'react-svg'
 import Switch from 'react-switch'
 import { useState } from 'react'
+import { useRecoilState } from 'recoil'
+import { facingModeState } from '@/states/rootStates/userState'
 
 const Sidebar = (props: { visible: boolean, closeSideBar: Function}) => {
+  const [facingMode, setFacingMode] = useRecoilState(facingModeState)
   const [enableBackCamera, setEnableBackCamera] = useState(false)
 
-  function handleChange() {
+  function changeFacingMode() {
     setEnableBackCamera(!enableBackCamera)
+    if(enableBackCamera) {
+      setFacingMode('environment')
+    } else {
+      setFacingMode('user')
+    }
+    console.log('facingMode', facingMode)
   }
 
   if(props.visible) {
@@ -24,7 +33,7 @@ const Sidebar = (props: { visible: boolean, closeSideBar: Function}) => {
             <div>
               背面カメラを使う
             </div>
-            <Switch onChange={handleChange} checked={enableBackCamera} onColor={'#F2994A'} />
+            <Switch onChange={changeFacingMode} checked={enableBackCamera} onColor={'#F2994A'} />
           </div>
         </div>
       </div>
