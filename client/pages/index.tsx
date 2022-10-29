@@ -26,7 +26,7 @@ const Home: NextPage = () => {
   const [clientListVisible, setClientListVisible] = useState(true)
   const [sidebarVisible, setSidebarVisible] = useState(false)
 
-  const facingMode = useRecoilValue(facingModeState)
+  const facingMode = useRecoilValue(facingModeState) || 'user'
 
   useEffect(() => {
     (async () => {
