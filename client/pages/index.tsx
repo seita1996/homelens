@@ -154,7 +154,7 @@ const Home: NextPage = () => {
     if(clientListVisible && isConnected) {
       return (
         <div>
-          <div className={styles.flexSpaceAround}>
+          <div className={`${styles.flexSpaceAround} ${styles.clientList}`}>
             <Clients clientList={memberList} myName={myName} clientsOnClick={startExchangeSDP} meOnClick={launchSettingsModal} />
           </div>
         </div>

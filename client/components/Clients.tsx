@@ -16,11 +16,11 @@ const Clients = (props: { clientList: any, myName: string, clientsOnClick: Funct
               }
             }
           }>
-          <div className={styles.iconBox}>
-            {viewIcon(client.mobile)}
-          </div>
           <div className={styles.textcenter}>
             {client.ua}
+          </div>
+          <div className={styles.iconBox}>
+            {viewIcon(client.mobile)}
           </div>
           <div className={styles.textcenter}>
             {decorateClientName(client.name, props.myName)}

@@ -28,7 +28,12 @@
 
 .remoteVideoBox {
   display: block;
-  margin: 0 auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
   border-radius: 10px;
   box-shadow: -4px -1px 15px 3px rgba(0, 0, 255, .2);
 }
@@ -46,6 +51,11 @@
   position: fixed;
   right: 30px;
   bottom: 30px;
+}
+
+.clientList {
+  align-items: center;
+  height: calc(100vh - 200px);
 }
 
 .iconBox {
