@@ -3,7 +3,7 @@ import { ReactSVG } from 'react-svg'
 import Switch from 'react-switch'
 import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
-import { facingModeState } from '@/states/rootStates/userState'
+import { facingModeState } from '../states/rootStates/userState'
 
 const Sidebar = (props: { visible: boolean, closeSideBar: Function}) => {
   const [facingMode, setFacingMode] = useRecoilState(facingModeState)
