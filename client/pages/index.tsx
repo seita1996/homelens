@@ -163,6 +163,32 @@ const Home: NextPage = () => {
     return <div></div>
   }
 
+  function videoView() {
+    if(clientListVisible) {
+        return (
+          <div>
+            <div>
+              <video id="remoteVideo" className={styles.noVideoBox} muted autoPlay playsInline></video>
+            </div>
+            <div>
+              <video id="localVideo" className={styles.noVideoBox} ref={localVideoElementRef} muted autoPlay playsInline></video>
+            </div>
+          </div>
+        )
+    }
+    return (
+      <div>
+        <div>
+          <video id="remoteVideo" className={styles.remoteVideoBox} muted autoPlay playsInline></video>
+        </div>
+        <div>
+          <video id="localVideo" className={styles.localVideoBox} ref={localVideoElementRef} muted autoPlay playsInline></video>
+          <Button text={'停止'} class={styles.stopBtn} visible={stopButtonVisible} onClickAction={turnOffVideo} />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
       <Head>
@@ -176,13 +202,7 @@ const Home: NextPage = () => {
           <ReactSVG src="/cog8tooth.svg" style={{ width: "32px", height: "32px" }} />
         </div>
       </div>
-      <div>
-        <video id="remoteVideo" className={styles.remoteVideoBox} muted autoPlay playsInline></video>
-      </div>
-      <div>
-        <video id="localVideo" className={styles.localVideoBox} ref={localVideoElementRef} muted autoPlay playsInline></video>
-        <Button text={'停止'} class={styles.stopBtn} visible={stopButtonVisible} onClickAction={turnOffVideo} />
-      </div>
+      {videoView()}
       <Button text={'再読み込み'} class={''} visible={!isConnected} onClickAction={() => location.reload()} />
       {clientList()}
       <Link href='/terms'>Terms</Link>

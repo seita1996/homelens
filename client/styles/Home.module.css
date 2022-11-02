@@ -33,6 +33,10 @@
   box-shadow: -4px -1px 15px 3px rgba(0, 0, 255, .2);
 }
 
+.noVideoBox {
+  display: none;
+}
+
 .stopBtn {
   background-color: white;
   border: none;
