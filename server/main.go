@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 	"net/http"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -43,14 +42,7 @@ func handleWebSocket(c echo.Context) error {
     // Processes Messages sent to a specific Room
     go r.run()
 
-		client := &Client {
-			socket: ws,
-			send:   make(chan string),
-			room:   r,
-			name:	time.Now().Format("2006-01-02 15:04:05"),
-      ua: ua_text,
-      mobile: ua.Mobile(),
-		}
+    client := newClient(ws, r, ua_text, ua.Mobile())
 		r.join(client)
 		printStruct("[handleWebSocket()] Clients in Room num", len(rooms[c.QueryParam("ipv4")].clients))
 
