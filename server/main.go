@@ -27,7 +27,7 @@ func handleWebSocket(c echo.Context) error {
 		defer ws.Close()
 
     // For IPoE connections, IPv4 addresses cannot be obtained, so the value sent after obtaining the address from the Client is used.
-    // TODO: あくまでc.RealIP()の値を優先し、ipv6形式であればQueryParamを採用するロジックにする
+    // TODO: Make the logic to prioritize the value of c.RealIP() (if it is in ipv6 format, QueryParam is adopted)
     escapedIp := strings.Replace(c.QueryParam("ipv4"), "\n", "", -1)
     escapedIp = strings.Replace(escapedIp, "\r", "", -1)
 		fmt.Println("[handleWebSocket()] 接続元IP: " + escapedIp)
