@@ -182,7 +182,7 @@ const Home: NextPage = () => {
           <video id="remoteVideo" className={styles.remoteVideoBox} muted autoPlay playsInline></video>
         </div>
         <div>
-          <video id="localVideo" className={styles.localVideoBox} ref={localVideoElementRef} muted autoPlay playsInline></video>
+          <video id="localVideo" className={stopButtonVisible ? styles.localVideoBox : ''} ref={localVideoElementRef} muted autoPlay playsInline></video>
           <Button text={'停止'} class={styles.stopBtn} visible={stopButtonVisible} onClickAction={turnOffVideo} />
         </div>
       </div>
