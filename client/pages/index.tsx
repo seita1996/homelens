@@ -83,6 +83,10 @@ const Home: NextPage = () => {
     const localVideo = localVideoElementRef.current as HTMLVideoElement
     stopVideo(localVideo, localStream)
     setStopButtonVisible(false)
+    setClientListVisible(true)
+
+    // TODO: Fix initialization by resetting p2p module variables without reloading
+    location.reload()
   }
 
   // Start PeerConnection
