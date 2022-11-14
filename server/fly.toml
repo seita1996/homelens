@@ -1,6 +1,6 @@
 # fly.toml file generated for homelens-server on 2022-09-19T08:54:47+09:00
 
-app = "homelens-server"
+app = "homecam-server"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
