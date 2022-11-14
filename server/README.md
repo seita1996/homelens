@@ -1,4 +1,4 @@
-# homecam server
+# homelens server
 
 ## Development
 

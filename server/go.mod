@@ -1,4 +1,4 @@
-module github.com/seita1996/homecam
+module github.com/seita1996/homelens
 
 go 1.19
 
