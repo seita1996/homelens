@@ -207,7 +207,7 @@ const Home: NextPage = () => {
         </div>
       </div>
       {videoView()}
-      <Button text={'再読み込み'} class={''} visible={!isConnected} onClickAction={() => location.reload()} />
+      <Button text={'再読み込み'} class={styles.reloadBtn} visible={!isConnected} onClickAction={() => location.reload()} />
       {clientList()}
       <Link href='/terms'>Terms</Link>
       <Sidebar visible={sidebarVisible} closeSideBar={closeSideBar} />
