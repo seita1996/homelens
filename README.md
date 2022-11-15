@@ -1,5 +1,7 @@
 # homelens
 
+![https://github.com/seita1996/homelens/blob/main/client/public/homelens-logo.png](https://github.com/seita1996/homelens/blob/main/client/public/homelens-logo.png)
+
 WebRTC test implementation project
 
 [![Client](https://github.com/seita1996/homelens/actions/workflows/client-ci.yml/badge.svg)](https://github.com/seita1996/homelens/actions/workflows/client-ci.yml)
