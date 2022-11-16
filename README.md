@@ -1,6 +1,6 @@
 # homelens
 
-![https://github.com/seita1996/homelens/blob/main/client/public/homelens-logo.png](https://github.com/seita1996/homelens/blob/main/client/public/homelens-logo.png)
+![https://github.com/seita1996/homelens/blob/main/images/homelens-logo.png](https://github.com/seita1996/homelens/blob/main/images/homelens-logo.png)
 
 WebRTC test implementation project
 
