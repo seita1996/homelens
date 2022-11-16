@@ -1,0 +1,43 @@
+.sideBox {
+  background-color: white;
+  width: 80%;
+  height: 80%;
+  text-align: center;
+  position: fixed;
+  top: 10%;
+  right: 10%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 255, .2);
+}
+
+.iconBox {
+  color: #F2994A;
+  margin-top: 18px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.title {
+  color: #F2994A;
+  font-size: 24px;
+  text-align: left;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.flexSpaceBetween {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flexCenter {
+  display: flex;
+  justify-content: center;
+  gap: 6px 30px;
+}
+
+.content {
+  margin-top: 50px;
+  margin-left: 20px;
+  margin-right: 20px;
+}

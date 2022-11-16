@@ -13,6 +13,7 @@ import Seo from '@/components/Seo'
 import { publicIpv4 } from 'public-ip'
 import { gzip, unzip } from '../lib/compression'
 import { sdp, playVideo, stopVideo, connect, webrtcSignaling } from '../lib/p2p'
+import InfoModal from '@/components/InfoModal'
 
 let localStream: MediaStream
 let receivedSdp: string
@@ -25,6 +26,7 @@ const Home: NextPage = () => {
   const [myName, setMyName] = useState('')
   const [stopButtonVisible, setStopButtonVisible] = useState(false)
   const [clientListVisible, setClientListVisible] = useState(true)
+  const [infoModalVisible, setInfoModalVisible] = useState(false)
   const [sidebarVisible, setSidebarVisible] = useState(false)
 
   const facingMode = useRecoilValue(facingModeState) || 'user'
@@ -121,6 +123,14 @@ const Home: NextPage = () => {
     }
   }
 
+  function openInfoModal() {
+    setInfoModalVisible(true)
+  }
+
+  function closeInfoModal() {
+    setInfoModalVisible(false)
+  }
+
   function openSideBar() {
     setSidebarVisible(true)
   }
@@ -205,15 +215,22 @@ const Home: NextPage = () => {
       />
       <div className={styles.flexSpaceBetween}>
         <div className={styles.title}>homelens（β版）</div>
-        <div className={styles.iconBox} onClick={openSideBar}>
-          <ReactSVG src="/cog8tooth.svg" style={{ width: "32px", height: "32px" }} />
+        <div className={styles.flexSpaceBetween}>
+          {/* TODO: Uncomment when displaying a modal */}
+          {/* <div className={styles.iconBox} onClick={openInfoModal}>
+            <ReactSVG src="/information-circle.svg" style={{ width: "32px", height: "32px" }} />
+          </div> */}
+          <div className={styles.iconBox} onClick={openSideBar}>
+            <ReactSVG src="/cog8tooth.svg" style={{ width: "32px", height: "32px" }} />
+          </div>
         </div>
       </div>
       {videoView()}
       <Button text={'再読み込み'} class={styles.reloadBtn} visible={!isConnected} onClickAction={() => location.reload()} />
       {clientList()}
-      <Link href='/terms'>Terms</Link>
       <Sidebar visible={sidebarVisible} closeSideBar={closeSideBar} />
+      {/* TODO: Uncomment when displaying a modal */}
+      {/* <InfoModal visible={infoModalVisible} closeInfoModal={closeInfoModal} /> */}
     </div>
   )
 }
