@@ -199,7 +199,7 @@ const Home: NextPage = () => {
       <Seo
         pageTitle={'homelens'}
         pageDescription={'同じLANに接続された端末間でビデオ通信。ログインなし、複数の端末でhomelensにアクセスするだけで簡単に通信できます。ビデオ映像は外部サーバーに送信されないので高速かつ安心です。'}
-        pageImg={'https://github.com/seita1996/homelens/blob/main/images/homelens-logo.png'}
+        pageImg={'https://homelens.seita.work/homelens-logo.png'}
         pageImgWidth={1920}
         pageImgHeight={1080}
       />
