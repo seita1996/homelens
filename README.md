@@ -14,3 +14,11 @@ No account is required, No application installation is needed, and video communi
 Communication with the WebSocket server occurs only for terminal detection, but all video streaming is secure and fast because it is closed within your LAN.
 
 (NAT traversal video communication is not possible.)
+
+## Development
+
+docker-compose.yml is available.
+
+The [Client](https://github.com/seita1996/homelens/tree/main/client) is written in [TypeScript](https://www.typescriptlang.org/).
+
+The [Server](https://github.com/seita1996/homelens/tree/main/server) is written in [Go](https://go.dev/).
