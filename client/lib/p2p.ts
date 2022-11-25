@@ -55,12 +55,12 @@ function pauseVideo(element: HTMLMediaElement) {
   if ('srcObject' in element) {
     element.srcObject = null
   }
-  else {
-    if (element.src && (element.src !== '') ) {
-      window.URL.revokeObjectURL(element.src)
-    }
-    element.src = ''
-  }
+  // else {
+  //   if (element.src && (element.src !== '') ) {
+  //     window.URL.revokeObjectURL(element.src)
+  //   }
+  //   element.src = ''
+  // }
 }
 
 // Suspend Stream
