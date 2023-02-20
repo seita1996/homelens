@@ -776,10 +776,10 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
-"@tanem/svg-injector@^10.1.46":
-  version "10.1.47"
-  resolved "https://registry.yarnpkg.com/@tanem/svg-injector/-/svg-injector-10.1.47.tgz#d27057b8202caf127354966e2e8cd8b41184fff9"
-  integrity sha512-T1sKs6K8qbod8b8ePzy9Y4A9GulSgXobFAtvhB/UrayYmPV902bhwK1q9BTSQRZB7b57lBXz4GkbJRL5KC5pqg==
+"@tanem/svg-injector@^10.1.47":
+  version "10.1.48"
+  resolved "https://registry.yarnpkg.com/@tanem/svg-injector/-/svg-injector-10.1.48.tgz#1a31734460babb4bebf4f5bfd826d646cdb065de"
+  integrity sha512-4T50gB0qPK7YQ0n6uGe0+wcB5PXIIuJrUB+f5bNcYC/qCXTGvFE+jZjLRZv1P9B7LVOLXkgHDEYYJMggGaxMng==
   dependencies:
     "@babel/runtime" "^7.20.13"
     content-type "^1.0.5"
@@ -3804,13 +3804,13 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
-react-svg@^16.1.1:
-  version "16.1.1"
-  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-16.1.1.tgz#ca3bf12ba9eb33e8e9edb4b3c0ac52c2e6ed4107"
-  integrity sha512-xcZrsqXEbhonFoTpU8RK7QZ5pqczdfL1A41EcATmRuR7eC609QqeaqY0OQi8LeudJoSeozvQGTDIC5IkRL2sfg==
+react-svg@^16.1.2:
+  version "16.1.2"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-16.1.2.tgz#dd24191ba5bbb88aadf046ddbf07fcebf6ee6a1c"
+  integrity sha512-JzoDlYzxz6Iwo6Z2WEYBw+hpQ7ztNtoa4v1Z9VQlPFmGyG4/kQ1WJGDEDy6Dwh7MuwMb19lbVmcaaE51O5ZHyw==
   dependencies:
     "@babel/runtime" "^7.20.13"
-    "@tanem/svg-injector" "^10.1.46"
+    "@tanem/svg-injector" "^10.1.47"
     "@types/prop-types" "^15.7.5"
     prop-types "^15.8.1"
 
