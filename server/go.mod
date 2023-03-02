@@ -3,7 +3,7 @@ module github.com/seita1996/homelens
 go 1.19
 
 require (
-	github.com/labstack/echo/v4 v4.10.1
+	github.com/labstack/echo/v4 v4.10.2
 	github.com/mssola/user_agent v0.6.0
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/net v0.7.0
