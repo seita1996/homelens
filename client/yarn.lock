@@ -3799,10 +3799,10 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
-react-svg@^16.1.9:
-  version "16.1.9"
-  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-16.1.9.tgz#f9afabd43d24d827a11e285474ea8187097dfce4"
-  integrity sha512-xPZ6/7REviaV3cPlFvA9dckZKa+nrA3sVRRxBz+qHxkAY8EMtM6cZJUdaPY1UynfT6bj8UBKkKY8tNVpvQ3QDw==
+react-svg@^16.1.10:
+  version "16.1.10"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-16.1.10.tgz#99f10bea7c4b681e0a87e3e8a04c8d5387ffda23"
+  integrity sha512-gvcSci1s7oSlK8MLRlso0Pf2yN8HFj2eWCO0JpOf70bjMx/Q3KydYGrds9v4vUEQ9fNIOufeHLiN6gNbv8B0wg==
   dependencies:
     "@babel/runtime" "^7.21.0"
     "@tanem/svg-injector" "^10.1.51"
