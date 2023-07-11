@@ -17,7 +17,7 @@
     "react-svg": "^16.1.18",
     "react-switch": "^7.0.0",
     "recoil": "^0.7.7",
-    "recoil-persist": "^5.0.1"
+    "recoil-persist": "^5.1.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
