@@ -20,7 +20,7 @@
     "recoil-persist": "^5.1.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
     "@types/node": "20.4.8",
     "@types/react": "18.2.19",
