@@ -14,7 +14,7 @@
     "public-ip": "^6.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-svg": "^16.1.23",
+    "react-svg": "^16.1.24",
     "react-switch": "^7.0.0",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0"
