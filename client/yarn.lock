@@ -276,7 +276,7 @@
     core-js-pure "^3.20.2"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.9", "@babel/runtime@^7.22.11", "@babel/runtime@^7.22.6", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.9", "@babel/runtime@^7.22.15", "@babel/runtime@^7.22.6", "@babel/runtime@^7.9.2":
   version "7.22.15"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.15.tgz#38f46494ccf6cf020bd4eed7124b425e83e523b8"
   integrity sha512-T0O+aa+4w0u06iNmapipJXMV4HoUir03hpx3/YqXXhu9xim3w+dVphjFWl1OH8NbZHw5Lbm9k45drDkgq2VNNA==
@@ -3726,12 +3726,12 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
-react-svg@^16.1.23:
-  version "16.1.23"
-  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-16.1.23.tgz#f631468b895add880a3514c2a8280b87363778c8"
-  integrity sha512-vF0AGtdnvHa4eYGhXgM6ddsjhMHXFucEGVz8XD0DXAmTcKxS0H0Qvdm/fDxKbLpD6krpyi/G5qbq2evMfj2SCw==
+react-svg@^16.1.24:
+  version "16.1.24"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-16.1.24.tgz#6ade27fe094592c33e3a9a546837f548b5772e8f"
+  integrity sha512-7IKurvuoSxzmkZ7F6EjbpVpdxYOmRj4Ek3Ex4vGZE7D7UqdczfGUADAK1oj/a0p+Y2tCoG4I87Jt0POuILXo1w==
   dependencies:
-    "@babel/runtime" "^7.22.11"
+    "@babel/runtime" "^7.22.15"
     "@tanem/svg-injector" "^10.1.62"
     "@types/prop-types" "^15.7.5"
     prop-types "^15.8.1"
