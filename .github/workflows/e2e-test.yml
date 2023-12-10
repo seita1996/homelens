@@ -17,6 +17,7 @@ jobs:
       run: |
         cd ../
         docker compose up -d
+        docker compose exec client yarn
         docker compose exec client yarn dev
     - uses: actions/setup-node@v3
       with:
