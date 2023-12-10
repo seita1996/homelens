@@ -36,3 +36,8 @@ jobs:
         name: playwright-report
         path: e2e-test/playwright-report/
         retention-days: 30
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: e2e-test/playwright-report/
