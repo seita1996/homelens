@@ -27,7 +27,7 @@ jobs:
         docker compose up -d
         docker compose exec client yarn
         docker compose exec client yarn build
-        docker compose exec client yarn start &
+        docker compose exec client yarn hosting &
     - uses: actions/setup-node@v3
       with:
         node-version: 18

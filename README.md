@@ -2,6 +2,7 @@
 
 [![Client test](https://github.com/seita1996/homelens/actions/workflows/client-ci.yml/badge.svg)](https://github.com/seita1996/homelens/actions/workflows/client-ci.yml)
 [![Server test](https://github.com/seita1996/homelens/actions/workflows/server-ci.yml/badge.svg)](https://github.com/seita1996/homelens/actions/workflows/server-ci.yml)
+[![E2E Test](https://github.com/seita1996/homelens/actions/workflows/e2e-test.yml/badge.svg)](https://seita1996.github.io/homelens/)
 [![CodeQL](https://github.com/seita1996/homelens/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/seita1996/homelens/actions/workflows/codeql-analysis.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 

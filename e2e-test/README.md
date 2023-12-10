@@ -23,7 +23,7 @@ cd ../
 docker compose up -d
 docker compose exec client yarn
 docker compose exec client yarn build
-docker compose exec client yarn start &
+docker compose exec client yarn hosting &
 ```
 
 Run test

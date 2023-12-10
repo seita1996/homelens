@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir: 'out',
-  output: 'out',
+  output: 'export',
   reactStrictMode: true,
   swcMinify: true,
 }
