@@ -19,7 +19,8 @@ jobs:
         chmod -R 777 client/
         docker compose up -d
         docker compose exec client yarn
-        docker compose exec client yarn dev &
+        docker compose exec client yarn build
+        docker compose exec client yarn start &
     - uses: actions/setup-node@v3
       with:
         node-version: 18

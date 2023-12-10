@@ -10,12 +10,11 @@ test('top page screenshot', async ({ page }, testInfo) => {
   await testInfo.attach('screenshot', { body: screenshot, contentType: 'image/png' });
 });
 
-// test('get started link', async ({ page }) => {
-//   await page.goto('https://playwright.dev/');
+test('a card representing your connection is displayed', async ({ page }) => {
+  await page.goto('http://localhost:3000/');
 
-//   // Click the get started link.
-//   await page.getByRole('link', { name: 'Get started' }).click();
+  // wait websocket connection
+  await page.waitForTimeout(5000);
 
-//   // Expects page to have a heading with the name of Installation.
-//   await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
-// });
+  await expect(page.getByText(/.+\(me\)$/i)).toBeVisible();
+});
