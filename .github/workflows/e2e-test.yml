@@ -16,6 +16,7 @@ jobs:
     - name: start application
       run: |
         cd ../
+        chmod -R 777 client/
         docker compose up -d
         docker compose exec client yarn
         docker compose exec client yarn dev
