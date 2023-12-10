@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: E2E Test
 on:
   push:
     branches: [ main ]
@@ -8,6 +8,9 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: e2e-test
     steps:
     - uses: actions/checkout@v3
     - name: start application
