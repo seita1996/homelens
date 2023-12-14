@@ -47,15 +47,16 @@ jobs:
       if: always()
       with:
         name: screenshot
-        path: ./tmp/chromium.png
+        path: tmp/chromium.png
         retention-days: 30
+        if-no-files-found: error
     - name: Comment opening announce
       uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const fs = require('fs');
-          const imageFilePath = './tmp/chromium.png';
+          const imageFilePath = 'tmp/chromium.png';
           const imageData = fs.readFileSync(imageFilePath);
           const imageBase64 = Buffer.from(imageData).toString('base64');
           const params = {
