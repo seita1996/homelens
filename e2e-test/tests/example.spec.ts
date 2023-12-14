@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 
-test('top page screenshot', async ({ page }, testInfo) => {
+test('top page screenshot', async ({ page, browserName }, testInfo) => {
   await page.goto('http://localhost:3000/');
 
   // wait websocket connection
   await page.waitForTimeout(5000);
 
-  const screenshot = await page.screenshot();
+  const screenshot = await page.screenshot({ path: `tmp/${browserName}.png` });
   await testInfo.attach('screenshot', { body: screenshot, contentType: 'image/png' });
 });
 
