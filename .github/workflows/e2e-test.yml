@@ -35,35 +35,43 @@ jobs:
       run: yarn playwright install --with-deps
     - name: Run Playwright tests
       run: yarn playwright test
-    - name: Set up bot comment
-      id: bot_comment
-      run: |
-        lf='\n'
-        message="Playwright has finished executiong :tada:"
-        message+="${lf}${lf}Here is the screenshot image:"
-        echo "message=${message}" >> $GITHUB_OUTPUT
-    - name: upload screenshot
+    - name: upload test results
       uses: actions/upload-artifact@v3
       if: always()
       with:
         name: screenshot
-        path: e2e-test/tmp/chromium.png
+        path: e2e-test/playwright-report
         retention-days: 30
         if-no-files-found: error
-    - name: Comment opening announce
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-1
+    - name: Upload screenshot
+      id: upload-s3
+      run: |
+        PR_NUM=$(jq -r '.number' $GITHUB_EVENT_PATH)
+        aws s3 cp .tmp/chromium.png s3://${{ secrets.AWS_S3_BUCKET }}/$PR_NUM/ --endpoint-url ${{ secrets.AWS_S3_ENDPOINT_URL }}
+    - name: Set up bot comment
+      id: bot_comment
+      run: |
+        PR_NUM=$(jq -r '.number' $GITHUB_EVENT_PATH)
+        lf='\n'
+        message="Playwright has finished executiong :tada:"
+        message+="${lf}${lf}Here is the screenshot image:"
+        message+="${lf}${lf}![](${{ secrets.AWS_S3_WEB_HOST_URL }}/$PR_NUM/chromium.png)"
+        echo "message=${message}" >> $GITHUB_OUTPUT
+    - name: Comment
       uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const fs = require('fs');
-          const imageFilePath = 'e2e-test/tmp/chromium.png';
-          const imageData = fs.readFileSync(imageFilePath);
-          const imageBase64 = Buffer.from(imageData).toString('base64');
           const params = {
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: context.payload.pull_request.number,
             body: '${{ steps.bot_comment.outputs.message }}',
-            data: imageBase64
           }
           await github.rest.issues.createComment(params)
