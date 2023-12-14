@@ -20,6 +20,8 @@ jobs:
         working-directory: e2e-test
     steps:
     - uses: actions/checkout@v3
+    - name: say hello
+      run: gh pr comment -b "Hello 👋"
     - name: start application
       run: |
         cd ../
