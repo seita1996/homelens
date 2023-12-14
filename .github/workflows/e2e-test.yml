@@ -23,25 +23,6 @@ jobs:
         working-directory: e2e-test
     steps:
     - uses: actions/checkout@v3
-    - name: Set up bot comment
-      id: bot_comment
-      run: |
-        lf='\n'
-        message="Hello :tada:"
-        message+="${lf}${lf}Welcome!!"
-        echo "message=${message}" >> $GITHUB_OUTPUT
-    - name: Comment opening announce
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const params = {
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.payload.pull_request.number,
-            body: '${{ steps.bot_comment.outputs.message }}'
-          }
-          await github.rest.issues.createComment(params)
     - name: start application
       run: |
         cd ../
@@ -59,12 +40,34 @@ jobs:
       run: yarn playwright install --with-deps
     - name: Run Playwright tests
       run: yarn playwright test
+    - name: Set up bot comment
+      id: bot_comment
+      run: |
+        lf='\n'
+        message="Playwright has finished executiong :tada:"
+        message+="${lf}${lf}Welcome!!"
+        echo "message=${message}" >> $GITHUB_OUTPUT
+    - name: Comment opening announce
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const params = {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.payload.pull_request.number,
+            body: '${{ steps.bot_comment.outputs.message }}'
+          }
+          await github.rest.issues.createComment(params)
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v2
       with:
         path: e2e-test/playwright-report
 
   deploy:
+    on:
+      push:
+        branches: [ main ]
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
