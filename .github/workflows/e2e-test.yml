@@ -20,10 +20,19 @@ jobs:
         working-directory: e2e-test
     steps:
     - uses: actions/checkout@v3
-    - name: say hello
-      run: gh pr comment -b "Hello 👋"
-      env:
-        GH_TOKEN: ${{ github.token }}
+    - name: Comment on Pull Request
+      uses: actions/github-script@v4
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const github = context.github;
+          const comment = 'Hello! This is a bot comment.';
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
     - name: start application
       run: |
         cd ../
