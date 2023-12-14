@@ -46,8 +46,7 @@ jobs:
     - name: Upload screenshot
       id: upload-s3
       run: |
-        PR_NUM=$(jq -r '.number' $GITHUB_EVENT_PATH)
-        aws s3 cp .tmp/chromium.png s3://${{ vars.AWS_S3_BUCKET }}/$PR_NUM/ --endpoint-url ${{ vars.AWS_S3_ENDPOINT_URL }}
+        aws s3 cp ./tmp/chromium.png s3://${{ vars.AWS_S3_BUCKET }}/${{ github.event.number }}/ --endpoint-url ${{ vars.AWS_S3_ENDPOINT_URL }}
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -55,11 +54,10 @@ jobs:
     - name: Set up bot comment
       id: bot_comment
       run: |
-        PR_NUM=$(jq -r '.number' $GITHUB_EVENT_PATH)
         lf='\n'
         message="Playwright has finished executiong :tada:"
         message+="${lf}${lf}Here is the screenshot image:"
-        message+="${lf}${lf}![](${{ vars.AWS_S3_WEB_HOST_URL }}/$PR_NUM/chromium.png)"
+        message+="${lf}${lf}![](${{ vars.AWS_S3_WEB_HOST_URL }}/${{ github.event.number }}/chromium.png)"
         echo "message=${message}" >> $GITHUB_OUTPUT
     - name: Comment
       uses: actions/github-script@v6
