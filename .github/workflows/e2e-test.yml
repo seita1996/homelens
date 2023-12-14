@@ -6,11 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   test:
     timeout-minutes: 60
@@ -45,35 +40,29 @@ jobs:
       run: |
         lf='\n'
         message="Playwright has finished executiong :tada:"
-        message+="${lf}${lf}Welcome!!"
+        message+="${lf}${lf}Here is the screenshot image:"
         echo "message=${message}" >> $GITHUB_OUTPUT
+    - name: upload screenshot
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: screenshot
+        path: ./tmp/chromium.png
+        retention-days: 30
     - name: Comment opening announce
       uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
+          const fs = require('fs');
+          const imageFilePath = './tmp/chromium.png';
+          const imageData = fs.readFileSync(imageFilePath);
+          const imageBase64 = Buffer.from(imageData).toString('base64');
           const params = {
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: context.payload.pull_request.number,
-            body: '${{ steps.bot_comment.outputs.message }}'
+            body: '${{ steps.bot_comment.outputs.message }}',
+            data: imageBase64
           }
           await github.rest.issues.createComment(params)
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v2
-      with:
-        path: e2e-test/playwright-report
-
-  deploy:
-    on:
-      push:
-        branches: [ main ]
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v3
