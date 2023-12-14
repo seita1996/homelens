@@ -55,7 +55,7 @@ jobs:
       id: bot_comment
       run: |
         lf='\n'
-        message="Playwright has finished executiong :tada:"
+        message="E2E test has finished :tada:"
         message+="${lf}${lf}Here is the screenshot image:"
         message+="${lf}${lf}![](${{ vars.AWS_S3_WEB_HOST_URL }}/${{ github.event.number }}/chromium.png)"
         echo "message=${message}" >> $GITHUB_OUTPUT
