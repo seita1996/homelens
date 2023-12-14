@@ -15,24 +15,33 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     defaults:
       run:
         working-directory: e2e-test
     steps:
     - uses: actions/checkout@v3
-    - name: Comment on Pull Request
-      uses: actions/github-script@v4
+    - name: Set up bot comment
+      id: bot_comment
+      run: |
+        lf='\n'
+        message="Hello :tada:"
+        message+="${lf}${lf}Welcome!!"
+        echo "message=${message}" >> $GITHUB_OUTPUT
+    - name: Comment opening announce
+      uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const github = context.github;
-          const comment = 'Hello! This is a bot comment.';
-          github.issues.createComment({
-            issue_number: context.issue.number,
+          const params = {
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: comment
-          });
+            issue_number: context.payload.pull_request.number,
+            body: '${{ steps.bot_comment.outputs.message }}'
+          }
+          await github.rest.issues.createComment(params)
     - name: start application
       run: |
         cd ../
