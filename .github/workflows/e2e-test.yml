@@ -43,7 +43,10 @@ jobs:
         path: e2e-test/playwright-report
         retention-days: 30
         if-no-files-found: error
+
+    # execute only pull_request
     - name: Upload screenshot
+      if: contains(fromJSON('["pull_request"]'), github.event_name)
       id: upload-s3
       run: |
         aws s3 cp ./tmp/chromium.png s3://${{ vars.AWS_S3_BUCKET }}/${{ github.event.number }}/ --endpoint-url ${{ vars.AWS_S3_ENDPOINT_URL }}
@@ -52,6 +55,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_DEFAULT_REGION: auto
     - name: Set up bot comment
+      if: contains(fromJSON('["pull_request"]'), github.event_name)
       id: bot_comment
       run: |
         lf='\n'
@@ -61,6 +65,7 @@ jobs:
         echo "message=${message}" >> $GITHUB_OUTPUT
     - name: Comment
       uses: actions/github-script@v6
+      if: contains(fromJSON('["pull_request"]'), github.event_name)
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
