@@ -18,23 +18,26 @@ jobs:
         working-directory: e2e-test
     steps:
     - uses: actions/checkout@v3
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
     - name: start application
       run: |
         cd ../
         chmod -R 777 client/
         docker compose up -d
-        docker compose exec client yarn
-        docker compose exec client yarn build
-        docker compose exec client yarn hosting &
+        docker compose exec client pnpm install
+        docker compose exec client pnpm build
+        docker compose exec client pnpm hosting &
     - uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: 20
     - name: Install dependencies
-      run: npm install -g yarn && yarn
+      run: pnpm install
     - name: Install Playwright Browsers
-      run: yarn playwright install --with-deps
+      run: pnpm playwright install --with-deps
     - name: Run Playwright tests
-      run: yarn playwright test
+      run: pnpm playwright test
     - name: upload test results
       uses: actions/upload-artifact@v3
       if: always()

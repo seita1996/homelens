@@ -6,7 +6,7 @@ services:
     environment:
       - NEXT_PUBLIC_WEBSOCKET_SERVER_URL=ws://localhost:8081
     tty: true
-    # command: npm run dev
+    # command: pnpm dev
     volumes:
       - ./client:/app
     ports:

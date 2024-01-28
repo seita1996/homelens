@@ -7,7 +7,7 @@ Using Frontend Framework [Next.js](https://nextjs.org/)
 Run the development server.
 
 ```
-$ yarn dev
+$ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -15,7 +15,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Testing
 
 ```
-$ yarn test
+$ pnpm test
 ```
 
 ## Deploy
