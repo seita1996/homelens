@@ -21,8 +21,8 @@ dependencies:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
   react-svg:
-    specifier: ^16.1.32
-    version: 16.1.32(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^16.1.33
+    version: 16.1.33(react-dom@18.2.0)(react@18.2.0)
   react-switch:
     specifier: ^7.0.0
     version: 7.0.0(react-dom@18.2.0)(react@18.2.0)
@@ -4279,8 +4279,8 @@ packages:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: true
 
-  /react-svg@16.1.32(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-u15BlUIjc7f4d2o62cxix0WlgbBPN+I2gScFu4+090Qj3AS08iQytIsLsLhiY9xXAT+VHoQtKVspL0XAuv0I2A==}
+  /react-svg@16.1.33(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-XpKC3G1yZ+ay+lBy1KtJWKGEZGMI+291jEfHdyFfm6X3vMVg/mly2+JjPPCr4ihPElxaZI2z32n2RVV7+PFKVw==}
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
