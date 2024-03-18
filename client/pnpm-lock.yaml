@@ -12,8 +12,8 @@ dependencies:
     specifier: 14.1.3
     version: 14.1.3(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
   public-ip:
-    specifier: ^6.0.1
-    version: 6.0.1
+    specifier: ^6.0.2
+    version: 6.0.2
   react:
     specifier: 18.2.0
     version: 18.2.0
@@ -4220,8 +4220,8 @@ packages:
     resolution: {integrity: sha512-E/ZsdU4HLs/68gYzgGTkMicWTLPdAftJLfJFlLUAAKZGkStNU72sZjT66SnMDVOfOWY/YAoiD7Jxa9iHvngcag==}
     dev: true
 
-  /public-ip@6.0.1:
-    resolution: {integrity: sha512-1/Mxa1MKrAQ4jF5IalECSBtB0W1FAtnG+9c5X16jjvV/Gx9fiRy7xXIrHlBGYjnTlai0zdZkM3LrpmASavmAEg==}
+  /public-ip@6.0.2:
+    resolution: {integrity: sha512-+6bkjnf0yQ4+tZV0zJv1017DiIF7y6R4yg17Mrhhkc25L7dtQtXWHgSCrz9BbLL4OeTFbPK4EALXqJUrwCIWXw==}
     engines: {node: '>=14.16'}
     dependencies:
       aggregate-error: 4.0.1
