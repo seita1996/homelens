@@ -21,8 +21,8 @@ dependencies:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
   react-svg:
-    specifier: ^16.1.33
-    version: 16.1.33(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^16.1.34
+    version: 16.1.34(react-dom@18.2.0)(react@18.2.0)
   react-switch:
     specifier: ^7.0.0
     version: 7.0.0(react-dom@18.2.0)(react@18.2.0)
@@ -359,6 +359,14 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
+    dev: true
+
+  /@babel/runtime@7.24.1:
+    resolution: {integrity: sha512-+BIznRzyqBf+2wCTxcKE3wDjfGeCoVE61KSHGpkzqrLi8qxqFwBeUFyId2cxkTmm55fzDGnm0+yCxaxygrLUnQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.1
+    dev: false
 
   /@babel/template@7.23.9:
     resolution: {integrity: sha512-+xrD2BWLpvHKNmX2QbpdpsBaWnRxahMwJjO+KZk2JOElj5nSmKezyS1B4u+QbHMTX69t4ukm6hh9lsYQ7GHCKA==}
@@ -885,7 +893,7 @@ packages:
   /@tanem/svg-injector@10.1.68:
     resolution: {integrity: sha512-UkJajeR44u73ujtr5GVSbIlELDWD/mzjqWe54YMK61ljKxFcJoPd9RBSaO7xj02ISCWUqJW99GjrS+sVF0UnrA==}
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.1
       content-type: 1.0.5
       tslib: 2.6.2
     dev: false
@@ -1034,6 +1042,11 @@ packages:
 
   /@types/prop-types@15.7.11:
     resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==}
+    dev: true
+
+  /@types/prop-types@15.7.12:
+    resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==}
+    dev: false
 
   /@types/react-dom@18.2.23:
     resolution: {integrity: sha512-ZQ71wgGOTmDYpnav2knkjr3qXdAFu0vsk8Ci5w3pGAIdj7/kKAyn+VsQDhXsmzzzepAiI9leWMmubXz690AI/A==}
@@ -4279,15 +4292,15 @@ packages:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: true
 
-  /react-svg@16.1.33(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-XpKC3G1yZ+ay+lBy1KtJWKGEZGMI+291jEfHdyFfm6X3vMVg/mly2+JjPPCr4ihPElxaZI2z32n2RVV7+PFKVw==}
+  /react-svg@16.1.34(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-L4ak1qNFLgzVbHm0xQEpHoIOqb3um/B0ybahd3U2TKoGZxb0JaPVI5lsAhvSng2P1kcsYEok2Z7RpcKx7arJGw==}
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@babel/runtime': 7.23.9
+      '@babel/runtime': 7.24.1
       '@tanem/svg-injector': 10.1.68
-      '@types/prop-types': 15.7.11
+      '@types/prop-types': 15.7.12
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
