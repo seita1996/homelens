@@ -13,3 +13,13 @@ updates:
     directory: "/server/" # Location of package manifests
     schedule:
       interval: "weekly"
+    groups:
+      types-dependencies:
+        patterns:
+          - "@types/*"
+      testing-library-dependencies:
+        patterns:
+          - "@testing-library/*"
+      eslint-dependencies:
+        patterns:
+          - "eslint*"
