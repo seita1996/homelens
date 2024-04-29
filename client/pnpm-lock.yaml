@@ -10,25 +10,25 @@ dependencies:
     version: 14.1.1
   next:
     specifier: 14.2.2
-    version: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0)
+    version: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.3.1)
   public-ip:
     specifier: ^6.0.2
     version: 6.0.2
   react:
-    specifier: 18.2.0
-    version: 18.2.0
+    specifier: 18.3.1
+    version: 18.3.1
   react-dom:
     specifier: 18.2.0
-    version: 18.2.0(react@18.2.0)
+    version: 18.2.0(react@18.3.1)
   react-svg:
     specifier: ^16.1.34
-    version: 16.1.34(react-dom@18.2.0)(react@18.2.0)
+    version: 16.1.34(react-dom@18.2.0)(react@18.3.1)
   react-switch:
     specifier: ^7.0.0
-    version: 7.0.0(react-dom@18.2.0)(react@18.2.0)
+    version: 7.0.0(react-dom@18.2.0)(react@18.3.1)
   recoil:
     specifier: ^0.7.7
-    version: 0.7.7(react-dom@18.2.0)(react@18.2.0)
+    version: 0.7.7(react-dom@18.2.0)(react@18.3.1)
   recoil-persist:
     specifier: ^5.1.0
     version: 5.1.0(recoil@0.7.7)
@@ -39,13 +39,13 @@ devDependencies:
     version: 6.4.2(jest@29.7.0)
   '@testing-library/react':
     specifier: ^15.0.2
-    version: 15.0.2(react-dom@18.2.0)(react@18.2.0)
+    version: 15.0.2(react-dom@18.2.0)(react@18.3.1)
   '@types/node':
     specifier: 20.12.7
     version: 20.12.7
   '@types/react':
-    specifier: 18.2.79
-    version: 18.2.79
+    specifier: 18.3.1
+    version: 18.3.1
   '@types/react-dom':
     specifier: 18.2.25
     version: 18.2.25
@@ -948,7 +948,7 @@ packages:
       redent: 3.0.0
     dev: true
 
-  /@testing-library/react@15.0.2(react-dom@18.2.0)(react@18.2.0):
+  /@testing-library/react@15.0.2(react-dom@18.2.0)(react@18.3.1):
     resolution: {integrity: sha512-5mzIpuytB1ctpyywvyaY2TAAUQVCZIGqwiqFQf6u9lvj/SJQepGUzNV18Xpk+NLCaCE2j7CWrZE0tEf9xLZYiQ==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -958,8 +958,8 @@ packages:
       '@babel/runtime': 7.24.1
       '@testing-library/dom': 10.0.0
       '@types/react-dom': 18.2.25
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
     dev: true
 
   /@tootallnate/once@2.0.0:
@@ -1050,11 +1050,11 @@ packages:
   /@types/react-dom@18.2.25:
     resolution: {integrity: sha512-o/V48vf4MQh7juIKZU2QGDfli6p1+OOi5oXx36Hffpc9adsHeXjVp8rHuPkjd8VT8sOJ2Zp05HR7CdpGTIUFUA==}
     dependencies:
-      '@types/react': 18.2.79
+      '@types/react': 18.3.1
     dev: true
 
-  /@types/react@18.2.79:
-    resolution: {integrity: sha512-RwGAGXPl9kSXwdNTafkOEuFrTBD5SA2B3iEB96xi8+xu5ddUa/cpvyVCSNn+asgLCTHkb5ZxN8gbuibYJi4s1w==}
+  /@types/react@18.3.1:
+    resolution: {integrity: sha512-V0kuGBX3+prX+DQ/7r2qsv1NsdfnCLnTgnRJ1pYnxykBhGMz+qj+box5lq7XsO5mtZsBqpjwwTu/7wszPfMBcw==}
     dependencies:
       '@types/prop-types': 15.7.12
       csstype: 3.1.3
@@ -3830,7 +3830,7 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.2.0):
+  /next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0)(react@18.3.1):
     resolution: {integrity: sha512-oGwUaa2bCs47FbuxWMpOoXtBMPYpvTPgdZr3UAo+pu7Ns00z9otmYpoeV1HEiYL06AlRQQIA/ypK526KjJfaxg==}
     engines: {node: '>=18.17.0'}
     hasBin: true
@@ -3854,9 +3854,9 @@ packages:
       caniuse-lite: 1.0.30001580
       graceful-fs: 4.2.11
       postcss: 8.4.31
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(@babel/core@7.23.9)(react@18.2.0)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
+      styled-jsx: 5.1.1(@babel/core@7.23.9)(react@18.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.2.2
       '@next/swc-darwin-x64': 14.2.2
@@ -4209,13 +4209,13 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /react-dom@18.2.0(react@18.2.0):
+  /react-dom@18.2.0(react@18.3.1):
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
       loose-envify: 1.4.0
-      react: 18.2.0
+      react: 18.3.1
       scheduler: 0.23.0
 
   /react-is@16.13.1:
@@ -4229,7 +4229,7 @@ packages:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: true
 
-  /react-svg@16.1.34(react-dom@18.2.0)(react@18.2.0):
+  /react-svg@16.1.34(react-dom@18.2.0)(react@18.3.1):
     resolution: {integrity: sha512-L4ak1qNFLgzVbHm0xQEpHoIOqb3um/B0ybahd3U2TKoGZxb0JaPVI5lsAhvSng2P1kcsYEok2Z7RpcKx7arJGw==}
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0
@@ -4239,23 +4239,23 @@ packages:
       '@tanem/svg-injector': 10.1.68
       '@types/prop-types': 15.7.12
       prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
     dev: false
 
-  /react-switch@7.0.0(react-dom@18.2.0)(react@18.2.0):
+  /react-switch@7.0.0(react-dom@18.2.0)(react@18.3.1):
     resolution: {integrity: sha512-KkDeW+cozZXI6knDPyUt3KBN1rmhoVYgAdCJqAh7st7tk8YE6N0iR89zjCWO8T8dUTeJGTR0KU+5CHCRMRffiA==}
     peerDependencies:
       react: ^15.3.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
       react-dom: ^15.3.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
     dependencies:
       prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
     dev: false
 
-  /react@18.2.0:
-    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
+  /react@18.3.1:
+    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
@@ -4265,10 +4265,10 @@ packages:
     peerDependencies:
       recoil: ^0.7.2
     dependencies:
-      recoil: 0.7.7(react-dom@18.2.0)(react@18.2.0)
+      recoil: 0.7.7(react-dom@18.2.0)(react@18.3.1)
     dev: false
 
-  /recoil@0.7.7(react-dom@18.2.0)(react@18.2.0):
+  /recoil@0.7.7(react-dom@18.2.0)(react@18.3.1):
     resolution: {integrity: sha512-8Og5KPQW9LwC577Vc7Ug2P0vQshkv1y3zG3tSSkWMqkWSwHmE+by06L8JtnGocjW6gcCvfwB3YtrJG6/tWivNQ==}
     peerDependencies:
       react: '>=16.13.1'
@@ -4281,8 +4281,8 @@ packages:
         optional: true
     dependencies:
       hamt_plus: 1.0.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
     dev: false
 
   /redent@3.0.0:
@@ -4647,7 +4647,7 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /styled-jsx@5.1.1(@babel/core@7.23.9)(react@18.2.0):
+  /styled-jsx@5.1.1(@babel/core@7.23.9)(react@18.3.1):
     resolution: {integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==}
     engines: {node: '>= 12.0.0'}
     peerDependencies:
@@ -4662,7 +4662,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.9
       client-only: 0.0.1
-      react: 18.2.0
+      react: 18.3.1
     dev: false
 
   /supports-color@5.5.0:
