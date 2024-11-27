@@ -5,7 +5,7 @@ go 1.22
 require (
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/mssola/user_agent v0.6.0
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	golang.org/x/net v0.30.0
 )
 
